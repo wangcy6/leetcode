@@ -7,7 +7,7 @@
 | 005  | [103. Binary Tree Zigzag Level Order Traversal](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/) | c++                                            | go                                                |      | Medium     | tree  |
 | 006  | [153. Find Minimum in Rotated Sorted Array](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/) | [ c++](https://www.jianshu.com/p/167961c4f096) | go                                                |      | Medium     | Array |
 | 007  | 513. Find Bottom Left Tree Value                             | weixin                                         | [jianshu](https://www.jianshu.com/p/78e5a915eeaa) |      | Medium     | tree  |
-| 008  | [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/) | [c++](https://www.jianshu.com/p/2ba5724d19a8)  |                                                   |      |            |       |
+| 008  | [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/) | [c++](https://www.jianshu.com/p/2ba5724d19a8)  | weixin                                            |      |            |       |
 
 
 
