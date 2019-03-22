@@ -1,3 +1,6 @@
+package main
+
+/**
 func minCostClimbingStairs(cost []int) int {
     n := len(cost)
 	dp := make([]int, n)
@@ -18,4 +21,4 @@ func minCostClimbingStairs(cost []int) int {
 	} else {
 		return dp[len(cost)-2]
 	}
-}
+}**/

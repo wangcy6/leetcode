@@ -196,6 +196,8 @@ func findMin2(nums []int) int {
 	return nums[begin]
 
 }
+
+/**
 func main() {
 
 	//data := []int{1, 2, 3, 4, 5, 6}
@@ -206,4 +208,4 @@ func main() {
 	//data := []int{1}
 	//fmt.Println(findMin1(data))
 
-}
+}**/
