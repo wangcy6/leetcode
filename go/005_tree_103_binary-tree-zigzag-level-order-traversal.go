@@ -51,9 +51,11 @@ func test() {
 	y += 100
 	fmt.Println(x, y)
 }
+
+/**
 func main() {
 
 	treeNode := InitTreeByInput()
 	fmt.Println(zigzagLevelOrder(treeNode))
 	test()
-}
+}**/

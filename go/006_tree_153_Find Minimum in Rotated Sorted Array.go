@@ -128,6 +128,9 @@ func mountainSequence(nums []int) int {
 	return max(nums[end], nums[begin])
 
 }
+func max(a int, b int) int {
+	return a
+}
 
 /** 第一题 find-minimum-in-rotated-sorted-array
 https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/description/
@@ -196,6 +199,8 @@ func findMin2(nums []int) int {
 	return nums[begin]
 
 }
+
+/**
 func main() {
 
 	//data := []int{1, 2, 3, 4, 5, 6}
@@ -206,4 +211,4 @@ func main() {
 	//data := []int{1}
 	//fmt.Println(findMin1(data))
 
-}
+}**/
