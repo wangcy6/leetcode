@@ -1,10 +1,6 @@
 // 01_103.go
 package main
 
-import (
-	"fmt"
-)
-
 func zigzagLevelOrder(root *TreeNode) [][]int {
 	var res = [][]int{}
 	// 切片slice是引用类型，但是[][]是null时候相当于c++的null指针，只值传递，无法修改指针的本身,
@@ -37,6 +33,7 @@ func zigzagLevelOrder(root *TreeNode) [][]int {
 	return res
 }
 
+<<<<<<< HEAD
 //闭包https://blog.csdn.net/wangshubo1989/article/details/79217291
 //lambda本质就是一个匿名函数 https://blog.csdn.net/u010386612/article/details/79875303
 func test() {
@@ -52,10 +49,16 @@ func test() {
 	fmt.Println(x, y)
 }
 
+=======
+>>>>>>> bad9cf0241eaa9dfdde9f837a3bf63b93451ab40
 /**
 func main() {
 
 	treeNode := InitTreeByInput()
 	fmt.Println(zigzagLevelOrder(treeNode))
+<<<<<<< HEAD
 	test()
+=======
+
+>>>>>>> bad9cf0241eaa9dfdde9f837a3bf63b93451ab40
 }**/
