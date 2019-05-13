@@ -1,3 +1,53 @@
+
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+       //合法的输入
+	   if(head ==NULL ||head->next ==NULL ||m >=n )
+	   {
+		   return head;
+	   }
+	   //反转链表范围
+	   ListNode* start=head; 
+	   ListNode* end=NULL;
+	   //翻转的过程
+	   ListNode* cur=NULL;
+	   ListNode* next=NULL;
+	   
+	   //02 移动m-1个距离
+	   for(int i=0;i<m-1 && start;i++)
+	   {
+		   start=start->next;
+	   }
+	   
+	   
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Solution {
 public:
    ListNode* reverseBetween(ListNode* head, int m, int n) 
@@ -40,8 +90,10 @@ public ListNode reverseBetween(ListNode head, int m, int n) {
     for(int i=0; i<n-m; i++)
     {
         start.next = then.next;
-        then.next = pre.next;
+        
+		then.next = pre.next;
         pre.next = then;
+		
         then = start.next;
     }
     
