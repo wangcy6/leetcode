@@ -124,14 +124,7 @@ public:
     }
 };
 **/
-//next https://leetcode-cn.com/problems/sort-characters-by-frequency/
-/**
-451. 根据字符出现频率排序
-**/
-func frequencySort(s string) string {
-
-}
-func main() {
+func main1() {
 	//fmt.Println(firstUniqChar("leetcode"))
 	//fmt.Println(firstUniqChar("cc"))       //数字相同
 	//fmt.Println(firstUniqChar("z"))        //只有一个字母

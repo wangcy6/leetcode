@@ -198,14 +198,35 @@ func findMin2(nums []int) int {
 }
 
 /**
-func main() {
+1. 不是整体有序
+2. 排除法：折半查找
+**/
 
-	//data := []int{1, 2, 3, 4, 5, 6}
-	//data := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	//data := []int{3, 3, 1, 3}
-	//fmt.Println(data, "min=1")
-	//fmt.Println(findMin(data))
-	//data := []int{1}
-	//fmt.Println(findMin1(data))
+func findMinData(nums []int) int {
+	// write your code here
 
-}**/
+	begin := 0
+	end := len(nums) - 1
+
+	for (end - begin) > 1 {
+		mid := (begin + end) / 2
+		if nums[mid-1] > nums[mid] {
+			begin = mid
+
+		} else if nums[mid-1] < nums[mid] {
+
+			end = mid
+		} else {
+			//即先增后减的序列
+			if nums[mid] <= nums[begin] {
+				begin++
+			}
+			if nums[mid] <= nums[end] {
+				end--
+			}
+		}
+	}
+
+	return min(nums[end], nums[begin])
+
+}
