@@ -2,12 +2,9 @@ class Solution {
 public:
     /**
 	Reverse a singly linked list.
-
 	Example:
-
-	
 	Input: 1->2->3->4->5->NULL
-	Output: 5->4->3->2->1->NULL
+	Output:5->4->3->2->1->NULL
 	
 	演示 第一节点 如何变成最后一个节点的
 	      end cur
@@ -26,11 +23,7 @@ public:
 	start: 3 ->2 ->1->4->5->NULL  (反转2次后仍然是完整链表)  
 	               |  |
 		           |  |
-			       end cur
-	
-	
-		              
-	
+			       end cur	
 	理解偏差
 	1 结合反转2考虑一下，这是一个链表，不是去构造另外一反转前的链表和反转后的链表，主要上学记住了构造新的链表。理解偏差1
 	2 理解偏差2 虽然知道反转第一个节点，变成最后一个阶段，但是根本理解有什么用
@@ -49,7 +42,8 @@ public:
 	空间复杂度：O(1)
 		 
 	**/
-    ListNode* reverseList(ListNode* head) {
+    ListNode* reverseList(ListNode* head) 
+	{
 	 
 	 ListNode start(-1);
 	 start.next=head;//保证 start 一定存在，才可以执行start.next
@@ -69,5 +63,11 @@ public:
 	 return start.next;
 	 
     }
-	//递归方法请参考别人实现 https://leetcode-cn.com/problems/reverse-linked-list/solution/fan-zhuan-lian-biao-by-leetcode/
+	
+	
 };
+
+/**
+92. Reverse Linked List II_list_015.cpp
+类似题目https://leetcode-cn.com/problems/reverse-linked-list-ii/
+**/
