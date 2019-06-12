@@ -30,3 +30,6 @@ public:
         return find_min(nums,0,nums.size()-1);
     }
 };
+
+
+//https://leetcode-cn.com/problems/asteroid-collision/

@@ -50,8 +50,7 @@ public:
         while(!queue.empty()&&i++<n)
         {
            number=queue.top();
-           queue.pop();//按照从小到大顺序
-
+           queue.pop();//按照从小到大顺序 greater
             for(int i=0;i<3;i++)
             {
                 long long temp=array[i]*number;
@@ -67,6 +66,32 @@ public:
 
         return number;
 
+    }
+
+    int coinChange(vector<int>& coins, int amount) 
+	{
+		vector<int> dp(amount + 1,0);
+		for(int i=1;i<=amount;i++)
+		{   
+	        int temp=-1;//
+			for(int coin:coins)
+			{    
+				  if((i - coin)>=0 &&dp[i - coin] >=0)  
+				  {  
+			         if (temp ==-1)
+                     {
+						 temp=dp[i - coin] + 1;//第一个结果
+					 }else
+					 {
+					   temp = min(temp, dp[i - coin] + 1);	 
+					 }						 
+			         
+			      }
+			}
+			dp[i]=temp;
+			
+		}
+		 return dp[amount];
     }
 };
 
