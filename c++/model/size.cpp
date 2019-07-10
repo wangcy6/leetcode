@@ -14,18 +14,20 @@ Description: sizeof
 #include <stdio.h>
 using namespace std;
 //通过预编译命令#pragma pack(n)，n=1,2,4,8,16来改变这一系数
-#pragma pack(8)
+#pragma pack(2)
+struct test { char m1; double m4; int m3; };//,16（4）,24（8）,
 struct node{
 
   char f; //1
   short  a;//2
   int b;//4
   };
-
+//12,16（4），16（8）
+//https://blog.csdn.net/mylinx/article/details/7007309
 struct s1
-{
-	short a; //第一个，放在[0,1]位置，
-	long b; //第二个，自身长度为4，按min(4, 8) = 4对齐，所以放在[4,7]位置
+{  
+	short a; //2  min(2,2)=2,
+	long b;  //8,
 };
 struct node n;
 
@@ -35,7 +37,8 @@ struct s2{
 	long long e;//8
 };
 
-
+//,12,
+//7,8,12,12
 struct s3
 { 
 	char a; //1
@@ -43,30 +46,33 @@ struct s3
 	short c; //2
 } ;
 //min(2,4)=2
+//,6,
 struct s4 
 { 
 	char a; //1
 	short b; //2
 	char c; //1
 } ; 
-
+//,4,,
 struct s5 
 { 
     char a; //1
     short b; //2
 } ;
+//,1,,
 struct s6 
 { 
 	char a; //1
 } ;
-//8
+//6,8（4）,
 struct s7
 { 
-	char a; //0-1     1
-	char b; //1-2 -4  2 ->4
+	char a; //0   +  1
+	char b; //1  +2  +2 ->4
 	int c;  //4->8    8
 } ;
 //变量顺序不一样，结果竟然不一样。
+//,12,,
 struct s8
 { 
 	char a; //1    //0 ->1->4
@@ -122,6 +128,7 @@ struct s14
 	char c;    //8---9
 	char d;   //9--->10 ->12 
 };
+
 //通过预编译命令#pragma pack(n)，n=1,2,4,8,16来改变这一系数
 //https://blog.csdn.net/lizhifeng2009/article/details/8838331
 int main(int argc, char *argv[])

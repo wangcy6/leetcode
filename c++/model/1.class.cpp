@@ -140,10 +140,16 @@ void test_constructor(){
 		d.vfunc();
 
 }
+void test_ref()
+{
+	int a=10;
+	int&b=a; //
+	int c=b;//对象复制，引用类型就是对象本身。
+}
 int main(void)
 {
-
-	test_constructor();
+   test_ref();
+	//test_constructor();
 	//test();
   //test_bitcopy();
 	return 0;
