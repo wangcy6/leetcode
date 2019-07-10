@@ -49,6 +49,7 @@ void testcopy(){
     /*A class does not exhibit bitwise copy semantics for the default copy assignment operator in the following cases
     1. When the class contains a member object of a class for which a copy assignment operator exists
     2. When the class is derived from a base class for which a copy assignment operator exists
+   
     3. When the class declares one or more virtual functions (we must not copy the vptr address of the righthand class object, since it    might be a derived class object)
     4. When the class inherits from a virtual base class (this is independent of whether a copy operator exists
     for the base class)*/
@@ -83,10 +84,45 @@ void test_construct()
     something.print();
 }
 //http://luodw.cc/2015/10/12/Cplus4/
+int array(int m){
+  int array[m]={0};
+}
+
+class Solution {
+public:
+    int countSubstrings(string s) {
+      int n=s.size();
+      int dp[n][n]={0};//空间复杂度 o(n2) dp[i][j]的含义是s[i..j]是否回文
+      int result=0;
+      //时间复杂度o(n2)
+      for(int start=0;start<n;start++)
+      {
+         for(int end=0;end<n;end++)
+         {
+            if(start>end)
+            {
+                continue;// 字符串开始位置大于结束位置 不合法字符
+            }
+            if(start ==end)
+            {
+               dp[start][end]=1;//只有一个字符 
+               result++;
+            }
+            //判断字符[start end] 如何确子串[start+1, end-1] 已经计算过呢。
+            if(s[start]==s[end]&&((end-start>=1)||dp[start+1]==dp[end-1])
+            {
+                dp[i][j]=1;
+                result++;
+            }
+
+         }
+      }
+      return result;
+    }
+};
 int main()
 {
-test_construct();
-//	testcopy();
+ 
 	return 0;
 }
 
