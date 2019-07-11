@@ -2,53 +2,63 @@
 #include <vector>
 using namespace std;
 
-//https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
+// https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
 class Solution {
 public:
-    int longestIncreasingPath(vector<vector<int>>& matrix) {
-        int rows = matrix.size();
-        if (!rows) return 0;
-        int cols = matrix[0].size();
-        
-        vector<vector<int>> dp(rows, vector<int>(cols, 0));
-        std::function<int(int, int)> dfs = [&] (int x, int y) {
-            if (dp[x][y]) return dp[x][y];
-            vector<vector<int>> dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
-
-            for (auto &dir : dirs) {
-                int xx = x + dir[0], yy = y + dir[1];
-                if (xx < 0 || xx >= rows || yy < 0 || yy >= cols) continue;
-                
-                if (matrix[xx][yy] <= matrix[x][y]) continue;
-
-                dp[x][y] = std::max(dp[x][y], dfs(xx, yy));
-                cout<<x << y<< dp[x][y]<<end;
-            }
-            return ++dp[x][y];
-        };
-        
-        int ret = 0;
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                ret = std::max(ret, dfs(i, j));
-            }
-        }
-        
-        return ret;
+  int DFS(vector<vector<int>> &matrix, vector<vector<int>> &dp, int i, int j,
+          int row, int col) {
+    if (dp[i][j] > 0) {
+      return dp[i][j];
     }
+    int left = 1, right = 1, up = 1, down = 1;
+    if (j > 0 && matrix[i][j - 1] > matrix[i][j]) {
+      left = 1 + DFS(matrix, dp, i, j - 1, row, col);
+    }
+    if (j < (col - 1) && matrix[i][j + 1] > matrix[i][j]) {
+      right = 1 + DFS(matrix, dp, i, j + 1, row, col);
+    }
+    if (i > 0 && matrix[i - 1][j] > matrix[i][j]) {
+      up = 1 + DFS(matrix, dp, i - 1, j, row, col);
+    }
+    if (i < (row - 1) && matrix[i + 1][j] > matrix[i][j]) {
+      down = 1 + DFS(matrix, dp, i + 1, j, row, col);
+    }
+    dp[i][j] = max(max(left, right), max(up, down));
+    cout << i << j << "=" << dp[i][j] << end;
+
+    return dp[i][j];
+  }
+  int longestIncreasingPath(vector<vector<int>> &matrix) {
+    // init
+    int row = matrix.size();
+    if (!row)
+      return 0;
+    int col = matrix[0].size();
+    vector<vector<int>> dp(row, vector<int>(col, 0));
+    int maxd = 0, tmp;
+    for (int i = 0; i < row; i++) {
+      for (int j = 0; j < col; j++) {
+        tmp = DFS(matrix, dp, i, j, row, col);
+        maxd = max(maxd, tmp);
+      }
+    }
+
+    return maxd;
+  }
 };
+// g++ -w  329.cpp -std=c++11
+int main(int argc, char *argv[]) {
+  Solution test;
 
-int  main(int   argc, char*   argv[])
-{
-    Solution test;
-    
+  vector<vector<int>> data;
+  vector<int> a{9, 9, 4};
+  vector<int> b{6, 6, 8};
+  vector<int> c{2, 1, 1};
 
-    std::vector<std::vector<int>> data { { 9,9,4] },
-                                         { 6,6,8 }, 
-                                          { 2,1,1 }, 
-                                         };
+  data.push_back(a);
+  data.push_back(b);
+  data.push_back(c);
+  cout << test.longestIncreasingPath(data);
 
-    cout<< test.longestIncreasingPath(data);
-    
-    return   0;
+  return 0;
 }
