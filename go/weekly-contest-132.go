@@ -177,10 +177,3 @@ func longestArithSeqLength(A []int) int {
 	} //11
 	return maxLengh
 }
-
-class Solution {
-public:
-    int twoCitySchedCost(vector<vector<int>>& costs) {
-        
-    }
-};

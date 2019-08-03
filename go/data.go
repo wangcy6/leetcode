@@ -72,12 +72,13 @@ func test() {
 	fmt.Println(len(array), array[1]) //0
 }
 
+/**
 func max(a int, b int) int {
 	if a > b {
 		return a
 	}
 	return b
-}
+}**/
 func min(a int, b int) int {
 	if a > b {
 		return b

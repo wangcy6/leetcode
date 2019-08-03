@@ -1,16 +1,6 @@
 // 997_find-the-town-judge.go
 package main
 
-import (
-	"fmt"
-)
-
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
-}
-
 /**
 993. 二叉树的堂兄弟节点
 如果二叉树的两个节点深度相同，但父节点不同，则它们是一对堂兄弟节点
@@ -186,13 +176,6 @@ func orages_rotting(grid [][]int, row int, col int, x int, y int, level int, tim
 
 }
 
-func main() {
-
-	//var dp [][]int = [][]int{{2, 1, 1}, {1, 1, 0}, {0, 1, 1}}
-	var dp [][]int = [][]int{{1}, {2}, {2}}
-	fmt.Println(orangesRotting(dp))
-}
-
 /**
 
 题目理解了吗，
@@ -205,14 +188,14 @@ We need to remember two things.
 Since it is preoder, left comes before right
 Assumption is if there is only one child, it has to be a left child.
 
-**/
+
 func recoverFromPreorder(S string) *TreeNode {
 	i := 0
 	return recover_from_string(&s, &i, 0)
 }
-
+**/
 //
-
+/**
 func recover_from_string(input *string, index *int, depth int) *TreeNode {
 
 	//当前元素的高度
@@ -224,7 +207,7 @@ func recover_from_string(input *string, index *int, depth int) *TreeNode {
 	}
 	//字符串变整数
 	nodeValue:=get_node_value(s,index)
-	
+
 	ptr:=new TreeNode(nodeValue,nil,nil);
 	ptr.Left=recover_from_string(s,index,depth+1)
 	ptr.Right=recover_from_string(s,index,depth+1)
@@ -245,3 +228,4 @@ func get_node_value(s *string,index* int){
 	}
 	return val
 }
+**/
