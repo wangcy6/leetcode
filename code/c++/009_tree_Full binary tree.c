@@ -41,7 +41,7 @@ For the left sub-tree use the index as (2*i + 1) while for the right sub-tree us
 **/
 bool isCompleteBinary(node *root)
 {
-	int total=isCompleteBinary(root);
+	int total=get_node_number(root);
 
    return is_complete_binary(root,1,total);
 	
@@ -57,6 +57,7 @@ bool is_complete_binary(node *root,int index,int& length)
    {
      return false;
    }
+   
   return  is_complete_binary(root->left,2*index,length) && is_complete_binary(root->right,2*index+1,length);
 
 }
