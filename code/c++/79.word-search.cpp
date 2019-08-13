@@ -10,60 +10,79 @@ The same letter cell may not be used more than once.
  **/
 class Solution {
 private:
-      int m_rows;
-      int m_cols;
-      int m_lenth;
-      string* ptr;
+      int     m_rows;
+      int     m_cols;
+      int     m_lenth;
+      string* m_ptr;
+     
 public:
-    bool exist(vector<vector<char> >& board, string word) {
+    /**
+    
+     time: o(max(k)*m*n)
+
+     */
+    bool exist(vector<vector<char>>& board, string word) {
    
-     int m_rows = board.size();
+     m_rows = board.size();
      if (m_rows == 0)  return false;
-     int m_cols =board[0].size();
-     m_lenth =word.length();
-     ptr = &word;
+     
+     m_cols =board[0].size();
+     m_lenth =word.size();
+     m_ptr =&word;
 
      for (int i=0;i < m_rows;i++)
      {
          for (int j=0;j < m_cols;j++)
-         {   //word[0]
+         {   
              if (dfs(board,i,j,0))
              {
                  return true;
              }
          }
      }
-
      return false;    
     }
 
-    bool dfs(vector<vector<char> >& board,int i,int j,int index)
-    {
-        if (i>= m_rows || j>=m_cols || i< 0 ||  j<0 || index>=m_lenth || board[i][j] != ptr->at(index))
-        {
+    bool dfs(vector<vector<char>>& board,int i,int j,int index)
+    {    
+        
+        
+        
+        if (i>= m_rows || j>=m_cols || i< 0 ||  j<0 || index>=m_lenth || board[i][j] != m_ptr->at(index))
+        {   
+        
             return false;//end
         }
+       
         if (index == m_lenth-1)
-        {
-            return true; //end
+        {   
+            
+            return true; //ok
         }
         
         char visited  = board[i][j];
-        board[i][j]='\0';  //防止死循环 A-->B B-->A
+        board[i][j]='*';  //防止死循环 A-->B B-->A
+        /**  超出时间限制   time: o(k*m*n)
         bool left = dfs(board,i,j-1,index+1);
         bool right = dfs(board,i,j+1,index+1);
         bool up   = dfs(board,i-1,j,index+1);
         bool down = dfs(board,i+1,j,index+1);
         board[i][j] =visited;
-
+        
        if ( left || right || up || down)
-       {
+       {    
+          
            return true;
        }
-       return false;
+       **/
+      
+        bool result =dfs(board,i,j-1,index+1) || dfs(board,i,j+1,index+1) ||  dfs(board,i-1,j,index+1) ||  dfs(board,i+1,j,index+1);
+        board[i][j] =visited;
+       return result;
     }
 };
 //g++ -g -Wall -std=c++11
+//g++ -g -werror -std=c++11
 int main()
 {
     vector<char> v1 = { 'A','B','C','E' };
@@ -79,3 +98,15 @@ int main()
     cout<< solution.exist(board,word);
 
 }
+/**
+测试异常： 
+--执行用时: 4 ms
+https://leetcode-cn.com/submissions/detail/25370302/testcase/
+[["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],
+ ["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a"],["a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","a","b"]]
+
+"baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+[["C","A","A"],["A","A","A"],["B","C","D"]]
+"AAB"
+ */
