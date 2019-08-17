@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
 using namespace std; 
 
 //函数对象
@@ -12,20 +13,29 @@ public:
     {
 
     }
+    
     Item (int x, int y, int val) 
     {
         x = x;
         y = y;
         val = val;
     }
-	//小顶堆是升序 
+    
+	//方法1 重载关系运算符
 	bool operator()(const Item  &first,const Item  &second) const{
 		return  first.val>second.val;
 	}
+	//方法2 重载比较运算符
 	bool operator<(const Item& b) const
    {
-     return val > b.val;
+      return val > b.val;
    }
+   /**
+   friend operator<( Node a, Node b ){
+    if( a.x== b.x ) return a.y> b.y;
+    return a.x> b.x;
+
+    }**/
 
 };
 
@@ -38,11 +48,13 @@ public:
 		if ( 0 == rows) return -1;
 		int cols = arr[0].size();
         
-        priority_queue<Item,std::vector<Item>,Item()> min_heap;
+		//priority_queue<Item> min_heap;
+        priority_queue<Item,std::vector<Item>,Item> min_heap;
         
         for (int j=0;j<cols;j++)
 		{   
 	        Item item(0,j,arr[0][j]);
+			cout<< "push" <<item.val<<endl;
 			min_heap.push(item);
 		}
         int result=0;
@@ -50,6 +62,7 @@ public:
         {    
 	        Item item = (Item)min_heap.top();
             min_heap.pop();
+			cout<< result<<endl;
             result=item.val;
             if (item.x != rows-1)
             {  
