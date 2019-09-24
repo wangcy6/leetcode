@@ -1,41 +1,38 @@
+
 # LeetCode
+[![Travis](https://img.shields.io/badge/language-C++-green.svg)]()
+[![Travis](https://img.shields.io/badge/language-JavaScript-yellow.svg)]()
+[![Travis](https://img.shields.io/badge/language-Python-red.svg)]()
+[![Travis](https://img.shields.io/badge/language-Java-blue.svg)]()
+![历史共访问次数](https://visitor-count-badge.herokuapp.com/total.svg?repo_id=wangcy6.leetcode)
+![今天被访问次数](https://visitor-count-badge.herokuapp.com/today.svg?repo_id=wangcy6.leetcode)
 
-简体中文 | [English](./README.en.md)
 
----
-
-仿照 azl397985856/leetcode格式整理
-
-## 介绍
+## 刷题计划
 
 leetcode 题解，记录自己的 leetcode 解题之路。
 
 本仓库目前分为五个部分：
 
-- 第一个部分是 leetcode 经典题目的解析，包括思路，关键点和具体的代码实现。
+- 第一个部分是 leetcode 经典题目的解析，包括思路，关键点和具体的代码实现(problems,code)
 
-- 第二部分是对于数据结构与算法的总结
+- 第二部分是对于数据结构与算法的总结(tag)
 
-- 第三部分是 anki 卡片， 将 leetcode 题目按照一定的方式记录在 anki 中，方便大家记忆。
+  > 只有熟练掌握基础的数据结构与算法，才能对复杂问题迎刃有余。
 
+- 第三部分 每日一题(daily). 
 
-> 只有熟练掌握基础的数据结构与算法，才能对复杂问题迎刃有余。
-
-## 关于我
-
+  >  孰能生巧,一起完成每天任务挑战。
 
 
-## 食用指南
 
-- 对于最近添加的部分， 后面会有 🆕 标注
-- 对于最近更新的部分， 后面会有 🖊 标注
-- 将来会在这里更新anki卡片
-- 这里有一份leetcode官方账号在知乎上给出的一个《互联网公司最常见的面试算法题有哪些？》的答案，我这里尽量去覆盖回答中的题目和知识点
-原文地址： https://www.zhihu.com/question/24964987/answer/586425979
 
-- 这里有一张互联网公司面试中经常考察的问题类型总结的思维导图，我们可以结合图片中的信息分析一下。
 
-![leetcode-zhihu](./assets//leetcode-zhihu.jpg)
+## 解题指南
+
+考虑一下，这个题目采用了什么样的数据结构，什么样的算法。
+
+![leetcode-zhihu](./images/leetcode-zhihu.jpg)
 
 (图片来自leetcode)
 
@@ -56,20 +53,17 @@ leetcode 题解，记录自己的 leetcode 解题之路。
 - 树与图：最近公共祖先、并查集
 - 字符串：前缀树（字典树） ／ 后缀树
 
+### 数据结构与算法的总结
+
+- 递归【整理中】
+- 动态规划【整理中】
+- 回溯【整理中】
+
+### 最新动态
 
 
 
-## 精彩预告
-
-
-
-## TO_DO
-
-- [Top 100 Liked Questions](https://leetcode.com/problemset/top-100-liked-questions/) (79 / 100)
-
-- [Top Interview Questions](https://leetcode.com/problemset/top-interview-questions/) (97 / 145)
-
-## 传送门
+## 经典题目
 
 ### leetcode 经典题目的解析
 
@@ -92,7 +86,7 @@ leetcode 题解，记录自己的 leetcode 解题之路。
 | 013  | [86. 分隔链表](https://leetcode-cn.com/problems/partition-list/) |                                                |                                                   | [每日一题2. 分隔链表](https://www.jianshu.com/p/1fe32c118848) |            | list  |
 | 014  | [147. 对链表进行插入排序](https://leetcode-cn.com/problems/insertion-sort-list/) |                                                |                                                   | [过程](https://www.jianshu.com/p/753ed796ce7c)               | Medium     | list  |
 
-### 数据结构与算法的总结
+
 
 
 
@@ -100,33 +94,27 @@ leetcode 题解，记录自己的 leetcode 解题之路。
 
 - [每日一题汇总](./daily/)
 
-- [每日一题认领区](https://github.com/wangcy6/leetcode/projects/1)
+  
 
-### 计划
-
-- [anki 卡片 完善](./assets/anki/)
-
-- [字符串类问题汇总](./todo/str/)
 
 ## 关注我
-
-
-
-## 交流群
 
 现在还是初级阶段，需要大家的意见和反馈，为了减少沟通成本，我组建了交流群。大家可以扫码进入
 
 ### QQ 群
 
+234303445
+
+### 微信号
+
+ ![微信号](https://user-images.githubusercontent.com/5937331/63406734-4f987d00-c41d-11e9-84f1-a527dd6cd5fe.png)
+
+微信公共号：
 
 
-### 微信群
 
+![微信公共号](./images/qrcode_for_gh_8413b90bcc33_258.jpg)
 
-
-### Telegram
-
-http://t.me/leetcode_intl
 
 
 ## 贡献
