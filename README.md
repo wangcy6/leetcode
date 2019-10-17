@@ -7,7 +7,7 @@
 ![历史共访问次数](https://visitor-count-badge.herokuapp.com/total.svg?repo_id=wangcy6.leetcode)
 ![今天被访问次数](https://visitor-count-badge.herokuapp.com/today.svg?repo_id=wangcy6.leetcode)
 
-# 最新题目（2019-10-17）
+# 最新一题（2019-10-17）
 
 
 
@@ -83,6 +83,7 @@
     - 动态规划：背包问题、最长子序列
     
     
+
   数据结构，主要有如下几种：
     
     - 数组与链表：单 / 双向链表
