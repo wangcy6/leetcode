@@ -93,27 +93,30 @@
     - 树与图：最近公共祖先、并查集
     - 字符串：前缀树（字典树） ／ 后缀树
 
-##  第二步  大量的模拟练习
+![leetcode-zhihu](./images/leetcode-zhihu.jpg)
+
+##  第二步  线下大量的模拟练习
+
+### 注册一账号（easy）
 
 - leetcode
+
 - licode
-- topcode，国外不的 提供等级划分
+- topcode， 提供等级划分
 
-上面提供很好设计和步骤,只不断总结技巧和方法。选择其中一个就好。
+> 上面提供很好练习题目
 
-
-
-
-
-## 第三步 参加每周竞赛 或者现场面试
+### 加入每日打卡社区（easy）
 
 
 
+## 第三步 线上参加每周竞赛 或者现场面试
+
+ 
 
 
 
 
-![leetcode-zhihu](./images/leetcode-zhihu.jpg)
 
 
 
