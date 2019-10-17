@@ -2,7 +2,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 )
@@ -62,8 +61,9 @@ func getHeight(root *TreeNode) float64 {
 	return math.Max(left, rgiht) + 1
 }
 
+/**
 func main() {
 	tree := CreateTestData("[1,2,3,4]")
 	Print(tree)
 	fmt.Println("Hello World!")
-}
+}**/

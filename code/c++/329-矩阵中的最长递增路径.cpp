@@ -2,50 +2,100 @@
 #include <vector>
 using namespace std;
 
-// https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
+
+/**
+给定一个整数矩阵，找出最长递增路径的长度。
+
+对于每个单元格，你可以往上，下，左，右四个方向移动。 你不能在对角线方向上移动或移动到边界外（即不允许环绕）。
+
+示例 1:
+
+输入: nums = 
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+] 
+输出: 4 
+解释: 最长递增路径为 [1, 2, 6, 9]。
+示例 2:
+
+输入: nums = 
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+] 
+输出: 4 
+解释: 最长递增路径是 [3, 4, 5, 6]。注意不允许在对角线方向上移动。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/longest-increasing-path-in-a-matrix
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+直觉：
+   2个方向移动，和4个方向移动 问题复杂度就增加了。具体增加在哪里的不清楚
+想法：
+最长递增路径的长度，四个方向，每个点都可能，2个方向不一样。
+
+描述：
+
+**/
 class Solution {
 public:
-  int DFS(vector<vector<int>> &matrix, vector<vector<int>> &dp, int i, int j,
-          int row, int col) {
-    if (dp[i][j] > 0) {
-      return dp[i][j];
-    }
-    int left = 1, right = 1, up = 1, down = 1;
-    if (j > 0 && matrix[i][j - 1] > matrix[i][j]) {
-      left = 1 + DFS(matrix, dp, i, j - 1, row, col);
-    }
-    if (j < (col - 1) && matrix[i][j + 1] > matrix[i][j]) {
-      right = 1 + DFS(matrix, dp, i, j + 1, row, col);
-    }
-    if (i > 0 && matrix[i - 1][j] > matrix[i][j]) {
-      up = 1 + DFS(matrix, dp, i - 1, j, row, col);
-    }
-    if (i < (row - 1) && matrix[i + 1][j] > matrix[i][j]) {
-      down = 1 + DFS(matrix, dp, i + 1, j, row, col);
-    }
-    dp[i][j] = max(max(left, right), max(up, down));
-    cout << i << j << "=" << dp[i][j] << end;
-
-    return dp[i][j];
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+     int rows = matrix.size();
+     if (0 == rows)
+     {
+         return 0;
+     }
+        
+     int cols = matrix[0].size();
+     vector<vector<int>> dp (rows,vector<int>(cols,0));//start from (i,j)
+     int longest =0;
+     
+     for (int i=0;i < rows;i++)
+     {
+        for (int j=0;j < cols ;j++)
+        {    
+            //没有被访问过
+             if ( 0 == dp[i][j])
+             {
+                 int temp =dfs(matrix,INT_MIN,i,j,dp,rows,cols);//计算一个节点
+                 longest =max(temp,longest);
+             }
+        }
+     }
+        
+    return longest;
   }
-  int longestIncreasingPath(vector<vector<int>> &matrix) {
-    // init
-    int row = matrix.size();
-    if (!row)
-      return 0;
-
-    int col = matrix[0].size();
-    vector<vector<int>> dp(row, vector<int>(col, 0));
-
-    int maxd = 0, tmp;
-    for (int i = 0; i < row; i++) {
-      for (int j = 0; j < col; j++) {
-        tmp = DFS(matrix, dp, i, j, row, col);
-        maxd = max(maxd, tmp);
+  
+  int dfs(vector<vector<int>>& matrix,int pre,int i,int j,vector<vector<int>>& dp,int rows,int cols )
+  {
+      if ( i < 0 || j <0 || i >=rows || j>=cols)
+      {
+          return 0;
       }
-    }
-
-    return maxd;
+      
+      if ( pre >= matrix[i][j])
+      {
+          return 0; //这个方向是降序
+      }
+      
+      if ( dp[i][j] > 0)
+      {
+          return dp[i][j]; //已经存在
+      }
+      //依赖关系：这个不是从上到下或者从下到上关系。每个节点都为其他人服务
+      int left  =dfs(matrix,matrix[i][j],i,j-1,dp,rows,cols);
+      int right =dfs(matrix,matrix[i][j],i,j+1,dp,rows,cols);
+      int up    =dfs(matrix,matrix[i][j],i+1,j,dp,rows,cols);
+      int down  =dfs(matrix,matrix[i][j],i-1,j,dp,rows,cols);
+      
+      dp[i][j]=max(max(left,right),max(up,down))+1;
+      
+      return dp[i][j];
+      
   }
 };
 // g++ -w  329.cpp -std=c++11
