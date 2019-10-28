@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.c": "cpp",
+        "xstring": "cpp",
+        "vector": "cpp",
+        "deque": "cpp",
+        "initializer_list": "cpp",
+        "xutility": "cpp",
+        "xiosbase": "cpp",
+        "xlocale": "cpp"
+    }
+}
