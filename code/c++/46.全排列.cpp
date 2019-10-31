@@ -3,7 +3,17 @@
  *
  * [46] 全排列
  *
- *
+ *输入: [1,2,3]
+ 输出: 6个元素
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+
  * 塔山之石
  * https://www.youtube.com/watch?v=8t7bIHIr9JY
  *
@@ -27,7 +37,7 @@ public:
     dfs(nums, out, used, pathStack, 0);
     return out;
   }
-  // start is the index to path
+  // start is the index to path,counts number of used
   void dfs(vector<int> &nums, vector<vector<int>> &out, vector<bool> &used,
            vector<int> &pathStack, int start) {
     if (start == nums.size()) {
