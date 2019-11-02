@@ -393,6 +393,14 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 
 
 
+# 剑指Offer
+
+| # NO     | Title                                                        | Solution |
+| -------- | ------------------------------------------------------------ | -------- |
+|          |                                                              |          |
+| offer-49 | [把字符串换成整数](https://www.nowcoder.com/practice/1277c681251b4372bdef344468e4f26e?tpId=13&tqId=11202&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking) |          |
+|          |                                                              |          |
+
 
 
 
@@ -401,6 +409,12 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 ## 第一步 通过阅读教材 学习 基本数据结构，算法 
 
 ### book
+
+- 算法【重点推荐】
+
+- 算法导论
+
+  > 阅读升级 :建议阅读英文版本，上面练习题也要跟着做
 
 - [数据结构(C语言版)].严蔚敏_吴伟民
 
@@ -414,7 +428,7 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 
   
 
-- 算法
+  
 
 - 算法导论
 
@@ -437,34 +451,13 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 
 
 
-  ### 数据结构与算法的总结
 
-  - 其中算法，主要是以下几种：
-  
-    - 基础技巧：分治、二分、贪心
-    - 排序算法：快速排序、归并排序、计数排序
-    - 搜索算法：回溯、递归、深度优先遍历，广度优先遍历，二叉搜索树等
-    - 图论：最短路径、最小生成树
-    - 动态规划：背包问题、最长子序列
-    
-    
-
-  数据结构，主要有如下几种：
-    
-    - 数组与链表：单 / 双向链表
-    - 栈与队列
-    - 哈希表
-    - 堆：最大堆 ／ 最小堆
-    - 树与图：最近公共祖先、并查集
-    - 字符串：前缀树（字典树） ／ 后缀树
-
-![leetcode-zhihu](./images/leetcode-zhihu.jpg)
 
 ##  第二步  线下大量的模拟练习
 
 
 
- 在 VS Code 中练习 [leetcode](https://github.com/jdneo/vscode-leetcode/blob/master/docs/README_zh-CN.md)
+ 在 VS Code 中练习 [leetcode](https://github.com/jdneo/vscode-leetcode/blob/master/docs/README_zh-CN.md)插件
 
 ### 一、刷题正确姿势
 
@@ -490,13 +483,55 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 
   
 
-  
+  - 刷题 流程阅读题目--分析 --手绘草稿图--算法文字描述--代码 （拿起盘茄闹钟 25分钟计时）
 
+    ![image.png](https://i.loli.net/2019/11/02/dCS3YAkIEKFDecv.png)
+  
+  注意：刷题期间不要感觉难，看别人答案 更不要md ，微信账号记录刷题感悟，一切过程都舍去
+  
+  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
+  
+  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
+  
+  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
+  
+  你能说自己不会吗？
+  
+  > 因为你行为（网上用浏览器看别人答案 和自己md）写总结 导致不不自信，一切灵丹妙药都不管用
+  >
+  > 因为浏览器这工具消耗大量时间看一个有一个网址，最后可能看小说新闻 这些内容。
+  >
+  > 自己写文章总结 就是放弃自己思考，里面拷贝复制然后中断思路。
+  
+  
+  
   - 根据题型，然后顺序刷题，必须经历3个月方式
   
   > 针对薄弱环节 例如 回溯法 ，然后顺序刷题，按照从小到大排序。上来做最后一题或者典型题目 有投机取消心理，在没刷题之间前自己败下阵来
   
+    ### 数据结构与算法的总结
   
+    - 其中算法，主要是以下几种：
+  
+      - 基础技巧：分治、二分、贪心
+      - 排序算法：快速排序、归并排序、计数排序
+      - 搜索算法：回溯、递归、深度优先遍历，广度优先遍历，二叉搜索树等
+      - 图论：最短路径、最小生成树
+      - 动态规划：背包问题、最长子序列
+  
+      
+  
+    数据结构，主要有如下几种：
+      
+  
+      - 数组与链表：单 / 双向链表
+      - 栈与队列
+      - 哈希表
+      - 堆：最大堆 ／ 最小堆
+      - 树与图：最近公共祖先、并查集
+      - 字符串：前缀树（字典树） ／ 后缀树
+  
+  ![leetcode-zhihu](./images/leetcode-zhihu.jpg)
 
 ### 二 、加入每日打卡社区（easy）
 
