@@ -401,6 +401,20 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 | offer-49 | [把字符串换成整数](https://www.nowcoder.com/practice/1277c681251b4372bdef344468e4f26e?tpId=13&tqId=11202&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking) |          |
 |          |                                                              |          |
 
+### 刷题的错误认知
+
+
+
+> 刷了这么常时间题目，发现能把leetcode前面50个题目搞明白，已经很厉害了，里面包含思想很多了，以前跳跃这刷题完全是错误。网站总结典型题目都不靠谱，还是老实的吧前面50个题目，全部在做一次。
+>
+> 我以前刷这么多题目，为什么还是不行 因为看似很多，都是别人总结的，高考也不出现同样的题目呀
+
+
+
+### 小目标：先干了前面50个题目。
+
+
+
 
 
 

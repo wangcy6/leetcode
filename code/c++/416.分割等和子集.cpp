@@ -50,7 +50,106 @@
 
 /**
  *
- * 算法描述：标准的回溯法 
+ * 子集和问题，对标准的回溯法的优化
+ * 举个例子，设有数组a[6] = { 1, 2, 3, 4, 5, 6 }，sum = 10，
+ * 则满足和为10的所有组合
+ 聪明的你一眼看出来
+ 
+ {1, 2, 3, 4}.
+{1, 3, 6},
+{1, 4, 5} ,
+{2, 3, 5},
+{4, 6},
+如果过去不知道，那么现在知道了
+
+你发现：
+1 虽然都有可能，存在路径 分别是 1和 2 ，4，开始的node 满足条件，  3 4 5 6 开头的节点不满足条件.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+每个点有2个可能，获取 或者不获取
+
+2 满足条件的坐标都是从小到大的， 例如  1 2 3 和 3 2  1 是同一个路径 这就不是排列组合问题了。只要寻找一个就可以
+ index从小到大就可以 
+
+ 3
+
+
+
+
+
+
+
+
+ */
+class Solution3 {
+public:
+  bool canPartition(vector<int> &nums) {
+    if (nums.empty())
+      return true;
+    int target = accumulate(nums.begin(), nums.end(), 0);
+    if (target % 2 != 0)
+      return false;
+    target /= 2;
+
+    return findSum(0, nums[0], target, nums);
+  }
+  bool findSum(int start, int sum, int target, vector<int> &nums) {
+    if (sum == target)
+      return true;
+    if (sum > target || start >= nums.size())
+      return false;
+
+    if (true == findSum(start + 1, sum + nums[start], target, nums)) {
+      return true;
+    }
+    int index = start + 1;
+    while (index < nums.size() && nums[index] == nums[start]) {
+      index++;
+    }
+    return findSum(index, sum, target, nums);
+  }
+};
+
+/**
+ *
+ * 算法描述：标准的回溯法  ok
  * 步骤 
  * 1. 从0到n个记录中选择一个记录开始(node)
  * 2. 如果符合条件 寻找结束
@@ -71,7 +170,7 @@
         continue;
       }
   添加后 空间运行减少2M
-  
+
  */
 class Solution1 {
 public:
@@ -93,7 +192,7 @@ public:
   bool dfs(int start, int lastSet, int target, vector<bool> &visited,
            vector<int> &nums) {
     if (start > nums.size()) {
-      return false;
+      return false; // 等于是表示最后一个元素是合法的。
     }
     for (int i = 0; i < nums.size(); i++) {
       if (visited[i] == true) {
