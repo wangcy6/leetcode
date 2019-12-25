@@ -90,3 +90,21 @@ type ListNode struct {
 	Val  int
 	Next *ListNode
 }
+
+// 打印树
+func PrintArray(array []int) {
+	for i := 0; i < len(array); i++ {
+		fmt.Print(array[i])
+	}
+	fmt.Println(" ")
+}
+func PrintArray2(array [][]int) {
+	for i := 0; i < len(array); i++ {
+		for j := 0; j < len(array[i]); j++ {
+			fmt.Print(array[i][j])
+		}
+		fmt.Println(" ")
+
+	}
+	fmt.Println(" ")
+}

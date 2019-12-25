@@ -41,9 +41,9 @@
  *
  * 解释: 数组不能分割成两个元素和相等的子集.
  *
+ *https://leetcode.com/problems/partition-equal-subset-sum/discuss/90588/Concise-C%2B%2B-Solution-summary-with-DFS-DP-BIT
  *
- *
- *
+ *https://leetcode.com/problems/partition-equal-subset-sum/discuss/453387/C%2B%2B-or-DP-or-Easy-to-understand
  */
 
 // @lc code=start
@@ -65,58 +65,10 @@
 你发现：
 1 虽然都有可能，存在路径 分别是 1和 2 ，4，开始的node 满足条件，  3 4 5 6 开头的节点不满足条件.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 每个点有2个可能，获取 或者不获取
 
-2 满足条件的坐标都是从小到大的， 例如  1 2 3 和 3 2  1 是同一个路径 这就不是排列组合问题了。只要寻找一个就可以
- index从小到大就可以 
-
- 3
-
-
-
-
-
-
-
-
+2 满足条件的坐标都是从小到大的， 例如  1 2 3 和 3 2  1 是同一个路径 这就不是排列组合问题了。
+只要寻找一个就可以 index从小到大就可以 
  */
 class Solution3 {
 public:
@@ -140,9 +92,11 @@ public:
       return true;
     }
     int index = start + 1;
+    //解决重复问题
     while (index < nums.size() && nums[index] == nums[start]) {
       index++;
     }
+    //解决重复问题
     return findSum(index, sum, target, nums);
   }
 };
