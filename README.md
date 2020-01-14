@@ -9,13 +9,157 @@
 
 
 
-# 题目进展
-
-leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
+# 一、最近进展
 
 
 
-# LeetCode Algorithm 
+### 2019年12月25 你的目标
+
+string 和 array 和int 就是弱点 这是基本功，
+
+**别考虑更加复杂算法了**。把基本简单思路清晰，代码正确。
+
+通过一篇生活中，智力中，还有其他现算法描述 转换成代码
+
+# 二、 如何刷题通关，成为头号玩家
+
+## 第一步 通过阅读教材 学习 基本数据结构，算法 
+
+### book
+
+- 算法【重点推荐】
+
+- 算法导论
+
+  > 阅读升级 :建议阅读英文版本，上面练习题也要跟着做
+
+- [数据结构(C语言版)].严蔚敏_吴伟民
+
+- 《大话数据结构》程杰 
+
+- 漫画算法：小灰的算法之旅
+
+  
+
+  > 阅读入门： 国内教材上面三本至少选择一本。
+
+  
+
+  
+
+- 算法导论
+
+  > 阅读升级 :建议阅读英文版本，上面练习题也要跟着做
+
+- 剑指offer 名企面试官精讲典型编程题
+
+- 编程之美——微软技术面试心得
+  
+> 阅读升华：经典永远不过时
+
+
+
+~~~
+百度网盘：
+链接：https://pan.baidu.com/s/1gdAbGlMbHiWzS2YeSIHBWQ 
+提取码：g4qm 
+送人玫瑰 手留余香，给个star
+~~~
+
+
+
+
+
+##  第二步  线下大量的模拟练习
+
+
+
+ 在 VS Code 中练习 [leetcode](https://github.com/jdneo/vscode-leetcode/blob/master/docs/README_zh-CN.md)插件
+
+### 一、刷题正确姿势
+
+- 根据题号顺序刷题。必须经历3个月方式(推荐做法)
+
+  原因1  
+
+  > 避免减少网络各种大神提供刷题分析影响，因为从最基层开始刷题，一步步成长，不是直接那最佳结果，从面试官角度 网络流传题目他么passed.
+  >
+  > 前期不要说只看热点问题，其他的不看，这个方式是误导
+  >
+  > leetcod 太阳存在，你安装他们题目做就可以了，你去看别人参照太阳画出来月亮
+  >
+  > 最后可能错误分析结果。切忌 切忌。
+
+  
+
+  原因2：能记住自己刷几个题目，别小看简单技术，每天一题。绕过投机取巧。
+
+  #### 检查： 0 -100 你刷过了吗？如果没有，请停止看后面的其他题目
+
+  
+
+  
+
+  - 刷题 流程阅读题目--分析 --手绘草稿图--算法文字描述--代码 （拿起盘茄闹钟 25分钟计时）
+
+    ![image.png](https://i.loli.net/2019/11/02/dCS3YAkIEKFDecv.png)
+  
+  注意：刷题期间不要感觉难，看别人答案 更不要md ，微信账号记录刷题感悟，一切过程都舍去
+  
+  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
+  
+  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
+  
+  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
+  
+  你能说自己不会吗？
+  
+  > 因为你行为（网上用浏览器看别人答案 和自己md）写总结 导致不不自信，一切灵丹妙药都不管用
+  >
+  > 因为浏览器这工具消耗大量时间看一个有一个网址，最后可能看小说新闻 这些内容。
+  >
+  > 自己写文章总结 就是放弃自己思考，里面拷贝复制然后中断思路。
+  
+  
+  
+  - 根据题型，然后顺序刷题，必须经历3个月方式
+  
+  > 针对薄弱环节 例如 回溯法 ，然后顺序刷题，按照从小到大排序。上来做最后一题或者典型题目 有投机取消心理，在没刷题之间前自己败下阵来
+  
+    ### 数据结构与算法的总结
+  
+    - 其中算法，主要是以下几种：
+  
+      - 基础技巧：分治、二分、贪心
+      - 排序算法：快速排序、归并排序、计数排序
+      - 搜索算法：回溯、递归、深度优先遍历，广度优先遍历，二叉搜索树等
+      - 图论：最短路径、最小生成树
+      - 动态规划：背包问题、最长子序列
+  
+      
+  
+    数据结构，主要有如下几种：
+      
+  
+      - 数组与链表：单 / 双向链表
+      - 栈与队列
+      - 哈希表
+      - 堆：最大堆 ／ 最小堆
+      - 树与图：最近公共祖先、并查集
+      - 字符串：前缀树（字典树） ／ 后缀树
+  
+  ![leetcode-zhihu](./images/leetcode-zhihu.jpg)
+
+### 二 、加入每日打卡社区（easy）
+
+
+
+> 每日一题
+
+## 第三步 线上参加每周竞赛 或者现场面试
+
+
+# 三、LeetCode Algorithm 
 
 (Notes: "&hearts;" means you need to buy a book from Leetcode) 
 
@@ -393,13 +537,13 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 
 
 
-# 剑指Offer
+# 
 
-| # NO     | Title                                                        | Solution |
-| -------- | ------------------------------------------------------------ | -------- |
-|          |                                                              |          |
-| offer-49 | [把字符串换成整数](https://www.nowcoder.com/practice/1277c681251b4372bdef344468e4f26e?tpId=13&tqId=11202&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking) |          |
-|          |                                                              |          |
+|      |      |      |
+| ---- | ---- | ---- |
+|      |      |      |
+|      |      |      |
+|      |      |      |
 
 ### 刷题的错误认知
 
@@ -407,178 +551,7 @@ leetcode 52  [N-Queens II](https://leetcode.com/problems/n-queens-ii/)
 
 > 刷了这么常时间题目，发现能把leetcode前面50个题目搞明白，已经很厉害了，里面包含思想很多了，以前跳跃这刷题完全是错误。网站总结典型题目都不靠谱，还是老实的吧前面50个题目，全部在做一次。
 >
-> 我以前刷这么多题目，为什么还是不行 因为看似很多，都是别人总结的，高考也不出现同样的题目呀
-
-
-
-### 小目标：先干了前面50个题目。
-
-
-
-
-
-
-# 如何刷题通关，成为头号玩家
-
-## 第一步 通过阅读教材 学习 基本数据结构，算法 
-
-### book
-
-- 算法【重点推荐】
-
-- 算法导论
-
-  > 阅读升级 :建议阅读英文版本，上面练习题也要跟着做
-
-- [数据结构(C语言版)].严蔚敏_吴伟民
-
-- 《大话数据结构》程杰 
-
-- 漫画算法：小灰的算法之旅
-
-  
-
-  > 阅读入门： 国内教材上面三本至少选择一本。
-
-  
-
-  
-
-- 算法导论
-
-  > 阅读升级 :建议阅读英文版本，上面练习题也要跟着做
-
-- 剑指offer 名企面试官精讲典型编程题
-
-- 编程之美——微软技术面试心得
-  
-> 阅读升华：经典永远不过时
-
-
-
-~~~
-百度网盘：
-链接：https://pan.baidu.com/s/1gdAbGlMbHiWzS2YeSIHBWQ 
-提取码：g4qm 
-送人玫瑰 手留余香，给个star
-~~~
-
-
-
-
-
-##  第二步  线下大量的模拟练习
-
-
-
- 在 VS Code 中练习 [leetcode](https://github.com/jdneo/vscode-leetcode/blob/master/docs/README_zh-CN.md)插件
-
-### 一、刷题正确姿势
-
-- 根据题号顺序刷题。必须经历3个月方式(推荐做法)
-
-  原因1  
-
-  > 避免减少网络各种大神提供刷题分析影响，因为从最基层开始刷题，一步步成长，不是直接那最佳结果，从面试官角度 网络流传题目他么passed.
-  >
-  > 前期不要说只看热点问题，其他的不看，这个方式是误导
-  >
-  > leetcod 太阳存在，你安装他们题目做就可以了，你去看别人参照太阳画出来月亮
-  >
-  > 最后可能错误分析结果。切忌 切忌。
-
-  
-
-  原因2：能记住自己刷几个题目，别小看简单技术，每天一题。绕过投机取巧。
-
-  #### 检查： 0 -100 你刷过了吗？如果没有，请停止看后面的其他题目
-
-  
-
-  
-
-  - 刷题 流程阅读题目--分析 --手绘草稿图--算法文字描述--代码 （拿起盘茄闹钟 25分钟计时）
-
-    ![image.png](https://i.loli.net/2019/11/02/dCS3YAkIEKFDecv.png)
-  
-  注意：刷题期间不要感觉难，看别人答案 更不要md ，微信账号记录刷题感悟，一切过程都舍去
-  
-  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
-  
-  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
-  
-  你现在战场上，你唯一做杀敌，各种技巧各种文章跳过，
-  
-  你能说自己不会吗？
-  
-  > 因为你行为（网上用浏览器看别人答案 和自己md）写总结 导致不不自信，一切灵丹妙药都不管用
-  >
-  > 因为浏览器这工具消耗大量时间看一个有一个网址，最后可能看小说新闻 这些内容。
-  >
-  > 自己写文章总结 就是放弃自己思考，里面拷贝复制然后中断思路。
-  
-  
-  
-  - 根据题型，然后顺序刷题，必须经历3个月方式
-  
-  > 针对薄弱环节 例如 回溯法 ，然后顺序刷题，按照从小到大排序。上来做最后一题或者典型题目 有投机取消心理，在没刷题之间前自己败下阵来
-  
-    ### 数据结构与算法的总结
-  
-    - 其中算法，主要是以下几种：
-  
-      - 基础技巧：分治、二分、贪心
-      - 排序算法：快速排序、归并排序、计数排序
-      - 搜索算法：回溯、递归、深度优先遍历，广度优先遍历，二叉搜索树等
-      - 图论：最短路径、最小生成树
-      - 动态规划：背包问题、最长子序列
-  
-      
-  
-    数据结构，主要有如下几种：
-      
-  
-      - 数组与链表：单 / 双向链表
-      - 栈与队列
-      - 哈希表
-      - 堆：最大堆 ／ 最小堆
-      - 树与图：最近公共祖先、并查集
-      - 字符串：前缀树（字典树） ／ 后缀树
-  
-  ![leetcode-zhihu](./images/leetcode-zhihu.jpg)
-
-### 二 、加入每日打卡社区（easy）
-
-
-
-> 每日一题
-
-## 第三步 线上参加每周竞赛 或者现场面试
-
-
-
-## 经典题目
-
-### leetcode 经典题目的解析
-
-> 这里仅列举具有代表性题目，并不是全部题目
-
-| #    | Title                                                        | c++                                            | go                                                | doc                                                          | Difficulty | Tag   |
-| ---- | ------------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------ | ---------- | ----- |
-| 001  | 83. Remove Duplicates   from Sorted List                     | [c++](https://www.jianshu.com/p/af402dc6d84e)  | [go](https://www.jianshu.com/p/af402dc6d84e)      |                                                              | Easy       | List  |
-| 002  | 148.sort-list                                                | [c++](https://www.jianshu.com/p/af402dc6d84e)  | [go](https://www.jianshu.com/p/af402dc6d84e)      |                                                              | Medium     | List  |
-| 003  | 162.find-peak-element                                        | [c++](https://www.jianshu.com/p/0076f5859d9d)  | [go](https://www.jianshu.com/p/0076f5859d9d)      |                                                              | Medium     | Array |
-| 004  | 232. Implement Queue   using Stacks                          | [ c++](https://www.jianshu.com/p/167961c4f096) |                                                   |                                                              | Medium     |       |
-| 005  | [103. Binary Tree Zigzag Level Order Traversal](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/) | c++                                            | go                                                |                                                              | Medium     | tree  |
-| 006  | [153. Find Minimum in Rotated Sorted Array](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/) | [ c++](https://www.jianshu.com/p/167961c4f096) | go                                                |                                                              | Medium     | Array |
-| 007  | 513. Find Bottom Left Tree Value                             | weixin                                         | [jianshu](https://www.jianshu.com/p/78e5a915eeaa) |                                                              | Medium     | tree  |
-| 008  | [746. 使用最小花费爬楼梯](https://leetcode-cn.com/problems/min-cost-climbing-stairs/) | [c++](https://www.jianshu.com/p/2ba5724d19a8)  | weixin                                            |                                                              | Easy       | Array |
-| 009  | Full binary tree                                             |                                                | [jianshu](https://www.jianshu.com/p/12586a91148d) |                                                              | Medium     | tree  |
-| 010  | [146. LRU Cache](https://leetcode.com/problems/lru-cache/)   |                                                |                                                   |                                                              | Hard       |       |
-| 011  | [226. Invert Binary Tree](https://leetcode-cn.com/problems/invert-binary-tree/) |                                                |                                                   |                                                              |            |       |
-| 012  | [111. 二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/) |                                                |                                                   |                                                              |            |       |
-| 013  | [86. 分隔链表](https://leetcode-cn.com/problems/partition-list/) |                                                |                                                   | [每日一题2. 分隔链表](https://www.jianshu.com/p/1fe32c118848) |            | list  |
-| 014  | [147. 对链表进行插入排序](https://leetcode-cn.com/problems/insertion-sort-list/) |                                                |                                                   | [过程](https://www.jianshu.com/p/753ed796ce7c)               | Medium     | list  |
+> 我以前刷这么多题目，为什么还是不行 因为看似很多，都是别人总结的，高考也不出
 
 
 
