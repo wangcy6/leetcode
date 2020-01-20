@@ -18,54 +18,6 @@
  * 对于每个单元格，你可以往上，下，左，右四个方向移动。 你不能在对角线方向上移动或移动到边界外（即不允许环绕）。
  * 
  *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
  * 示例 1:
  *
  * 输入: nums = 
@@ -106,15 +58,15 @@ public:
       return 0;
     int col = matrix[0].size();
 
-    vector<vector<int>> dp(row, vector(col, 0)); //记录从每个点开始最长的路径
-    int path = 1;
+    vector<vector<int>> dp(row, vector(col, 1)); //记录从每个点开始最长的路径
+    int path = 0;
     for (int i = 0; i < row; i++) {
       for (int j = 0; j < col; j++) {
         //任意坐标开始都有可能
-        if (dp[i][j] != 0) {
+        
           int temp = dfs(matrix, dp, i, j, INT_MIN);
           path = max(temp, path);
-        }
+        
       }
     }
 
@@ -126,21 +78,21 @@ public:
     if (row < 0 || col < 0 || row >= matrix.size() || col >= matrix[0].size()) {
       return 0; // 最简单的case
     }
-    if (pre > = matrix[row][col]) {
+    if (pre >= matrix[row][col]) {
       return 0; //不是递增了，肯定是0
     }
 
-    if (dp[row][col] > 0) {
-      return do[row][col]; //避免重复计算
+    if (dp[row][col] > 1) {
+      return dp[row][col]; //避免重复计算
     }
 
-    int left = dfs(matrix, dp, row, cols - 1, matrix[row][col]);
-    int right = dfs(matrix, dp, row, cols + 1, matrix[row][col]);
-    int up = dfs(matrix, dp, row - 1, cols, matrix[row][col]);
-    int down = dfs(matrix, dp, row + 1, cols, matrix[row][col]);
+    int left = dfs(matrix, dp, row, col - 1, matrix[row][col]);
+    int right = dfs(matrix, dp, row, col + 1, matrix[row][col]);
+    int up = dfs(matrix, dp, row - 1, col, matrix[row][col]);
+    int down = dfs(matrix, dp, row + 1, col, matrix[row][col]);
 
-    dp[row][col] = max(max(left, right), max(up, down)) + 1; //变化地方
-    return dp[row][col];
+      dp[row][col] = max(max(left, right), max(up, down)) + 1; //变化地方
+      return dp[row][col];
   }
 };
 // @lc code=end
