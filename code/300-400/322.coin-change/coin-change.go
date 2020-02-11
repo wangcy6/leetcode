@@ -43,6 +43,7 @@ func coinChange2(index int, coins []int, amount int, sum int, lessTotal *int) {
 	count := amount / coins[index] //最多多少个该金币组成
 	//从最大开始尝试,最少i是0， amount-i*coins[index]数值保持不变
 	//如果当前组合超过最小值，后面的递归就不需要判断
+	//  // i到0结束，不死循环，index就没有发生变化
 	for i := count; i >= 0 && sum+i < *lessTotal; i-- {
 		coinChange2(index+1, coins, amount-i*coins[index], sum+i, lessTotal)
 	}
