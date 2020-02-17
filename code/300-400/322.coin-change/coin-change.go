@@ -15,7 +15,6 @@ import (
 func coinChange(coins []int, amount int) int {
 	var lessTotal int = 99999
 	sort.Sort(sort.Reverse(sort.IntSlice(coins))) //大到到下
-	fmt.Println(coins)
 
 	coinChange2(0, coins, amount, 0, &lessTotal)
 	if lessTotal == 99999 {
@@ -98,7 +97,41 @@ func coinChangeNode(index int, coins []int, amount int) int {
 	}
 	return total
 }
+
+//思路是
+func coinChangeNumber(coins []int, amount int) int {
+	sum := 0
+
+	coinChangeNumber1(0, coins, amount, &sum)
+	return sum
+}
+
+func coinChangeNumber1(index int, coins []int, amount int, sum *int) {
+
+	if amount == 0 {
+		*sum++
+		return
+	}
+
+	if amount < 0 || index >= len(coins) {
+		return
+	}
+
+	counts := amount / coins[index]
+
+	for i := 0; i <= counts; i++ {
+		coinChangeNumber1(index+1, coins, amount-i*coins[index], sum)
+	}
+
+}
+
 func main() {
+
+	input1 := []int{1, 5, 10, 20, 50, 100}
+	var n int
+
+	fmt.Scan(&n)
+	fmt.Println(coinChangeNumber(input1, n))
 
 	//data := []int{1}
 
