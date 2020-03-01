@@ -158,17 +158,35 @@ string 和 array 和int 就是弱点 这是基本功，
 
 
 
+#### 根据题型刷题：
 
+- 题型：数学
 
-题型：数学
-
-https://www.youtube.com/playlist?list=PLLuMmzMTgVK70LRovZHZwfRaMTboc6Xdc
+​        https://www.youtube.com/playlist?list=PLLuMmzMTgVK70LRovZHZwfRaMTboc6Xdc
 
 
 
 
 
 ## 第三步 线上参加每周竞赛 或者现场面试
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
