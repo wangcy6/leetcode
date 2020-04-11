@@ -42,6 +42,8 @@ categories: ["Leetcode"]
 ### 三、**解题思路**(停留 300秒，累计12分钟)
 
 > 说出思路才能决定能否沟通下去，不考虑最佳实现。
+>
+> 拒绝奇技淫巧，拒绝过于诡异的技巧，因为这些技巧无法举一反三，学了也不划算。
 
   
 
@@ -98,6 +100,10 @@ $$
 
 ### 六、  举一反三（停留 600秒，累计30分钟）
 
+
+
+
+
 假如扔的是那个鸡蛋呢？
 
 #### [887. 鸡蛋掉落](https://leetcode-cn.com/problems/super-egg-drop/)
@@ -120,14 +126,14 @@ https://hacpai.com/article/1572019989743
 
 https://www.zhihu.com/question/31855632
 
-https://www.jianshu.com/p/cfa5bc2d3ab0
 
-https://www.youtube.com/watch?v=FQa8qbO5CNQ
-
-https://www.zhihu.com/question/19690210/answer/545731938
-
-https://www.zhihu.com/question/19690210
 
 [https://github.com/ericliu859/AcmPaper/tree/master/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/%E4%BC%98%E5%8C%96/2004%20-%20%E6%9C%B1%E6%99%A8%E5%85%89%EF%BC%9A%E3%80%8A%E4%BC%98%E5%8C%96%EF%BC%8C%E5%86%8D%E4%BC%98%E5%8C%96%EF%BC%81%E2%80%94%E2%80%94%E4%BB%8E%E3%80%8A%E9%B9%B0%E8%9B%8B%E3%80%8B%E4%B8%80%E9%A2%98%E6%B5%85%E6%9E%90%E5%AF%B9%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E7%AE%97%E6%B3%95%E7%9A%84%E4%BC%98%E5%8C%96%E3%80%8B](https://github.com/ericliu859/AcmPaper/tree/master/动态规划/优化/2004 - 朱晨光：《优化，再优化！——从《鹰蛋》一题浅析对动态规划算法的优化》)
 
-[https://charlesliuyx.github.io/2018/10/11/%E3%80%90%E7%9B%B4%E8%A7%82%E7%AE%97%E6%B3%95%E3%80%91Egg%20Puzzle%20%E9%B8%A1%E8%9B%8B%E9%9A%BE%E9%A2%98/](https://charlesliuyx.github.io/2018/10/11/[直观算法]Egg Puzzle 鸡蛋难题/)
+https://leetcode-cn.com/problems/super-egg-drop/solution/887-by-ikaruga/
+
+
+
+
+
+拒绝奇技淫巧，拒绝过于诡异的技巧，因为这些技巧无法举一反三，学了也不划算。
