@@ -1,5 +1,12 @@
 
-
+---
+title: "智力题"
+date: 2019-10-10T17:02:43+08:00
+description: ""
+draft: false
+tags: ["Interview Question"]
+categories: ["Leetcode"]
+---
 
 ### 一、**题目信息**
 今天来做这个题目，主要考察的xxx 
