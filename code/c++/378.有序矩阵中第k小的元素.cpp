@@ -26,7 +26,7 @@
  * ⁠  [12, 13, 15]
  * ],
  * k = 8,
- * 
+ *  
  * 返回 13。
  * 
  * 
@@ -38,11 +38,11 @@
  */
 
 // @lc code=start
-class Solution {
+class Solution
+{
 public:
-    int kthSmallest(vector<vector<int>>& matrix, int k) {
-
+    int kthSmallest(vector<vector<int>> &matrix, int k)
+    {
     }
 };
 // @lc code=end
-
