@@ -49,12 +49,44 @@
  */
 
 //@lc code=start
+// [3,33,333] 10000
+//0 ms ,6.8 MB
 class Solution
+{
+public:
+    int combinationSum4(vector<int> &nums, int target)
+    {
+        vector<unsigned int> dp(target + 1, 0); //默认为0
+        dp[0] = 1;                              // target=4 集合{4} 4-4=0;
+
+        //动态规划，从小到大每个Indextarget都要计算,全部要计算。
+        for (int targetIndex = 1; targetIndex <= target; targetIndex++)
+        {
+            //分叉
+            for (int j = 0; j < nums.size(); j++)
+            {
+                //和为给定目标正整数的组合
+                if (targetIndex >= nums[j])
+                {
+                    dp[targetIndex] += dp[targetIndex - nums[j]];
+                }
+            }
+        }
+
+        return dp[target];
+    }
+};
+
+//@lc code=start
+// 用map代替vector 虽然节省空间，但是时间增加了
+// 40 ms  8.2 MB
+class Solution4
 {
 private:
     unordered_map<int, int> map;
 
 public:
+    //驱动点
     int combinationSum4(vector<int> &nums, int target)
     {
         if (target < 0 || nums.empty())
