@@ -52,7 +52,43 @@
  */
 
 // @lc code=start
+
 class Solution
+{
+public:
+    //判断一个字符是否在一个字符串中存在，一定要必须等字符串全部遍历吗？
+    //当然，不然怎么知道，存在不存在呢？这样奇异技巧 可以不去了解。
+    string getHint(string secret, string guess)
+    {
+        int bulls = 0; //数字出现在秘密数字中，且位置都与秘密数字一致
+        int cows = 0;  //在秘密数字中，但位置与秘密数字不一致
+
+        unordered_map<char, int> data; //统计字符串出现次数，
+        // 如果大于标识出现过，secret出现了，guess查询到了
+        // 如果小于0，guess出现了，secret还当发现
+        // 等于0 2边都没有出现
+        for (int i = 0; i < secret.size(); i++)
+        {
+            if (secret[i] == guess[i])
+            {
+                bulls++;
+            }
+            if (data[guess[i]]-- > 0)
+            {
+                cows++;
+            }
+
+            if (data[secret[i]]++ < 0)
+            {
+                cows++;
+            }
+        }
+
+        return to_string(bullsCount) + "A" + to_string(cowsCount) + "B";
+    }
+};
+
+class Solution1
 {
 public:
     //难点：跟位置顺序有关系 数据结果哪些？unordered_map 跟输入顺序有关系吗？
