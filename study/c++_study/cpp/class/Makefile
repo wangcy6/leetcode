@@ -1,23 +1,23 @@
 # Makefile  exe程序
-TARGET =effective-cpp-40
-CC=g++
+TARGET =test
+CC=g++ 
 #C 编译器的选项
-CFLAGS=-Wall  -g -I. 
+CFLAGS=-std=c++11 -Wall  -g -I. 
 # C++ 编译器的选项
 CXXFLAGS=$CFLAGS
-OBJS += effective-cpp-40.o
+OBJS += class_continer.o
 #动态库路径            
 #LIBPATH  = -L./dynamiclib/libs 
 #链接动态库 
 ShareLib   = -lpthread 
-LIBPATH  = 
- ##头文件路径
+#LIBPATH  = 
+##头文件路径
 CPPFLAGS   = -I .
 
 
 # Compiles each of the object files as separate targets
 #%.o: %.cpp把所有的[.cpp]文件都编译成[.o]文件
-%.o: %.cpp
+%.o: class_continer.cpp
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # -o $@ -> Tells make to put the output in a file named after the target

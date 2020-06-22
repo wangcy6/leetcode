@@ -52,3 +52,15 @@ go/learing/.exe
 /.vscode
 ./code/go/*.exe
 *.class
+*.out
+*.o
+demo
+*.log
+*.mp4
+AUTHORS
+ChangeLog
+COPYING
+depcomp
+missing
+stamp-h1
+INSTALL
