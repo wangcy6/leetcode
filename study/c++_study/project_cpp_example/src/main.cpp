@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <class_object.h>
 using namespace std;
 
 void testVector(){
@@ -13,5 +14,6 @@ void testVector(){
 //g++ -std=c++11 class_continer.cpp
 int main() 
 {
-	testVector();
+	//testVector();
+	testVirtual();
 }

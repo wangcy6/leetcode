@@ -8,7 +8,7 @@
 
 ##  产生Makefile 文件
 
- 
+> automake、autoconf生成configure文件
 
 - GNU Automake
 
@@ -22,13 +22,15 @@
 
 yum install -y  autoconf automake
 
-
+![](https://images2015.cnblogs.com/blog/753880/201606/753880-20160605121846586-1241135412.jpg)
 
 1. 运行autoscan命令
 
 
 
 2. 将configure.scan 文件重命名为configure.ac，并修改configure.ac文件
+
+- gcc重要选项
 
 
 
@@ -58,9 +60,26 @@ yum install -y  autoconf automake
 
 8. 运行./confiugre脚本
 
-   执行.／configure命令，最终的Makefile文件产生。
 
-### 总结
+
+
+ configure常用选项： ./configure  --help
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 命令
 
 ~~~shell
 autoscan
@@ -70,8 +89,11 @@ aclocal
 autoheader
 autoconf
 automake -a
-./configure
+./configure  CFLAGS="-g"
 make
+
+https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/index.html
+
 ~~~
 
 
