@@ -132,6 +132,12 @@ public:
 
     int dfs(vector<int> &nums, int target, vector<int> &dp)
     {
+
+        if (target < 0)
+            return 0; //和为 target 的组合个数组合不成立
+        if (target == 0)
+            return 1;
+
         if (dp[target] != -1)
         {
             return dp[target];
@@ -207,3 +213,39 @@ public:
     }
 };
 // @lc code=end
+
+class Solution
+{
+
+public:
+    /**
+     * @param nums: an integer array and all positive numbers, no duplicates
+     * @param target: An integer
+     * @return: An integer
+     */
+    int backPackVI(vector<int> &nums, int target)
+    {
+        // write your code here
+
+        vector<int> dp(target + 1, 0);
+        dp[0] = 1;
+
+        for (int i = 1; i <= target; i++)
+        {
+
+            for (int j = 0; j < nums.size(); j++)
+            {
+                // dp[i]+=dp[i-nums[j]]; 为什么错误了.
+                if (nums[j] > i)
+                {
+                    continue;
+                    //如果走到target=0, 4-1 -1-2=0 时候才算一个完整路径
+                    //说明 如果target-nums[i] 不是一个完整的路径。
+                }
+                dp[i] += dp[i - nums[j]]; //条件是什么
+            }
+        }
+
+        return dp[target];
+    }
+};
