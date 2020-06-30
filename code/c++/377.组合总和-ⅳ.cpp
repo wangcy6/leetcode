@@ -44,13 +44,14 @@
  * 特别感谢 @pbrother 添加此问题并创建所有测试用例。
  *  
  * 1 个数字可以出现多次  这个直接被拦路了
- * 2. 
+ * 2.  https://leetcode.com/problems/combination-sum-iv/discuss/85036/1ms-Java-DP-Solution-with-Detailed-Explanation
 
  */
 
 //@lc code=start
 // [3,33,333] 10000
 //0 ms ,6.8 MB
+//[1,2,3] 32
 class Solution
 {
 public:
