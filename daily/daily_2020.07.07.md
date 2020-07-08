@@ -164,10 +164,16 @@ insert into test.tm_login_log values(1003,'2017-01-18');
 要解决 group by 语句的优化问题，你可以先想一下这个问题：执行 group by 语句为什
 么需要临时表？
 
+
+
 group by 的语义逻辑，是统计不同的值出现的个数。
+
+
 
 但是，由于每一行的 id%100 的结
 果是无序的，所以我们就需要有一个临时表，来记录并统计结果。
+
+
 
 那么，如果扫描过程中可以保证出现的数据是有序的，是不是就简单了呢？  
 
@@ -195,6 +201,10 @@ group by 的语义逻辑，是统计不同的值出现的个数。
 
 - 什么是sort_buffer？
 
+  1. 结果已经有了，不需要额外计算 ，只需要排序就可以
+
+  2. Using filesort经常出现在order by、group by、distinct、join等情况下。
+
 ![image.png](https://i.loli.net/2020/07/07/3hTpazjVLbdtqxm.png)
 
 
@@ -206,6 +216,18 @@ group by 的语义逻辑，是统计不同的值出现的个数。
 3. 但如果排序数据量太大，内存放不下，则不得不利用磁盘临时文件辅助排序  
 
 ![image.png](https://i.loli.net/2020/07/07/Q86d2LJTIwyAOam.png)
+
+~~~
+
+/* 打开 optimizer_trace，只对本线程有效 */
+SET optimizer_trace='enabled=on';
+
+/* 执行语句 */
+select city, name,age from t where city='杭州' order by name limit 1000;
+
+/* 查看 OPTIMIZER_TRACE 输出 */
+SELECT * FROM `information_schema`.`OPTIMIZER_TRACE`\G
+~~~
 
 
 
@@ -290,9 +312,14 @@ SELECT class_id, gender, COUNT(*) num FROM students GROUP BY class_id, gender;
 
 ## 参考
 
-- http://blog.sae.sina.com.cn/archives/4096 【正在看】
+
 
 >  分享最实用的经验 ， 希望每一位来访的朋友都能有所收获！
 >
 > 不保证一定正确，如果更好方式，疑问，请联系我
 
+
+
+系统设计题：连续5天登录用户（快手）
+
+https://mp.weixin.qq.com/s/NuS298UZ1HLNPkoVuedYHg
