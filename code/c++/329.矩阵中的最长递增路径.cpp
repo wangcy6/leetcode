@@ -52,7 +52,68 @@
  */
 
 // @lc code=start
+
 class Solution
+{
+public:
+  //[329] 矩阵中的最长递增路径
+  int longestIncreasingPath(vector<vector<int>> &matrix)
+  {
+    int path = 0; //最长递增路径的长度
+    int rows = matrix.size();
+    if (rows == 0)
+    {
+      return 0;
+      // testcase [] core
+      //if the requested position is out of range by throwing an out_of_range exception
+    }
+    int cols = matrix[0].size();
+
+    vector<vector<int>> dp(rows, vector(cols, 1)); //减少回溯递归次数，记录<i,j>为开始节点最长递增路径的长度.
+
+    for (int i = 0; i < rows; i++)
+    {
+      for (int j = 0; j < cols; j++)
+      {
+        //dfs遍历每一个节点<i,j>。类比N查树
+        int temp = dfs(matrix, dp, i, j, INT_MIN);
+        path = max(path, temp);
+      }
+    }
+    return path;
+  }
+
+  int dfs(vector<vector<int>> &matrix, vector<vector<int>> &dp, int row, int col, int pre)
+  {
+    //叶子节点
+    if (row < 0 || col < 0 || row >= matrix.size() || col >= matrix[0].size())
+    {
+      return 0; // 最简单的case
+    }
+    // 8-->4
+    if (pre >= matrix[row][col])
+    {
+      return 0; //不是递增了，肯定是0
+    }
+    //dp[row][col] 默认为1
+    if (dp[row][col] > 1)
+    {
+      return dp[row][col]; //避免重复计算
+    }
+
+    //为什么可以 递归调用？结构重复
+    int cur = matrix[row][col];
+    int left = dfs(matrix, dp, row, col - 1, cur);
+    int right = dfs(matrix, dp, row, col + 1, cur);
+    int up = dfs(matrix, dp, row - 1, col, cur);
+    int down = dfs(matrix, dp, row + 1, col, cur);
+
+    dp[row][col] = max(max(left, right), max(up, down)) + 1;
+    return dp[row][col];
+  }
+};
+
+class Solution1
 {
 public:
   int longestIncreasingPath(vector<vector<int>> &matrix)
