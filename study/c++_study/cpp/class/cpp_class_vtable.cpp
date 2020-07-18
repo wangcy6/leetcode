@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 #include <iostream>
 using namespace std;
 

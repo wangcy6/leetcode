@@ -56,7 +56,7 @@ public:
 void testvirtual()
 {
 	Base1* base= new Base1();
-	//base->Base1::Base1();
+	base->Base1();
 	
 }
 
