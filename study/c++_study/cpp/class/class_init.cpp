@@ -60,6 +60,35 @@ void testvirtual()
 	
 }
 
+
+class Foo
+{
+private:
+	int _id;
+public:
+	Foo() :_id(0)
+	{  
+		cout << "Default Construct " << this  << " id = " << _id << endl;
+	}
+	Foo(int id) :_id(id)
+	{ 
+		cout << "Construct " << this << " id = " << _id << endl;
+	}
+	~Foo()
+	{  
+		cout << "Destructor " << this << endl; 
+	}
+	static void *operator new (size_t size)
+	{
+		Foo *p = (Foo*)malloc(size);
+		return p;
+	}
+	static void operator delete(void *p, size_t size)
+	{
+		free(p);
+	}
+};
+
 int main() {
 	
 	testvirtual();
