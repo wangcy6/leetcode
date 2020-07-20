@@ -3,6 +3,11 @@
 #include <exception>
 #include <vector>      
 #include <stdexcept> 
+#include <stdio.h>
+#include <cstdlib>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 
 using namespace std;
 /**
@@ -21,6 +26,12 @@ assert vs throw
 三、Catch Segmentation fault in c++
 
 1. C++ try-catch blocks only handle C++ exceptions. 
+2.  Signals are sometimes called software interrupts() 信号(signal)是一种软中断
+   - Signals can be sent By the kernel to a process 
+ 
+
+3. The signals SIGKILL 9  and SIGSTOP 19 cannot be caught or ignored.  不能被忽略、处理和阻塞
+  
 
 
 
@@ -29,9 +40,19 @@ ref：
 - https://gist.github.com/fairlight1337/55978671ace2c75020eddbfbdd670221
 - http://www.cplusplus.com/reference/exception/exception/
 - https://isocpp.org/wiki/faq/exceptions#why-exceptions
-
+- https://stackoverflow.com/questions/2350489/how-to-catch-segmentation-fault-in-linux
+- http://gityuan.com/2015/12/20/signal/	
 
 **/
+
+//liunx系统调用抛出异常
+void segfault_sigaction(int signal, siginfo_t *si, void *arg)
+{
+    printf("Caught segfault at address %p\n", si->si_addr);
+    exit(0); //进程退出
+}
+
+
 class myexception: public exception
 {
   virtual const char* what() const throw()
@@ -41,7 +62,7 @@ class myexception: public exception
 public:
   myexception()
   {
-      cout<< "myexception()" <<endl;
+      //out<< "myexception()" <<endl;
   }
 } myex;
 
@@ -138,7 +159,7 @@ void test_logic_error()
          std::cout<< "attempt to divide integer by 0." << std::endl;
     }
 }
-//liunx系统调用抛出异常
+
 
 void test_segmentation()
 {
@@ -157,7 +178,25 @@ void test_segmentation()
     }
 
 }
+
+void test_sig_segment()
+{
+	    int *foo = NULL;
+		struct sigaction sa;
+	
+		memset(&sa, 0, sizeof(struct sigaction));
+		sigemptyset(&sa.sa_mask);
+		sa.sa_sigaction = segfault_sigaction;
+		sa.sa_flags   = SA_SIGINFO;
+	
+		sigaction(SIGSEGV, &sa, NULL);
+	
+		/* Cause a seg fault */
+		*foo = 1;
+
+}
 int main () {
+  test_sig_segment();
   test_segmentation();
   testException();
   test_out_of_range();
