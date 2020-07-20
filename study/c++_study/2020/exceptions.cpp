@@ -26,8 +26,10 @@ assert vs throw
 三、Catch Segmentation fault in c++
 
 1. C++ try-catch blocks only handle C++ exceptions. 
-2.  Signals are sometimes called software interrupts() 信号(signal)是一种软中断
+2.  Signals are sometimes called software interrupts() 信号(signal)是一种软中断。
    - Signals can be sent By the kernel to a process 
+   - 信号是在软件层次上对中断机制的一种模拟，信号是进程间通信机制中唯一的异步通信机制
+    - you can distinguish three types of interrupts: software Interrupts/Hardware Interrupts/Exceptions
  
 
 3. The signals SIGKILL 9  and SIGSTOP 19 cannot be caught or ignored.  不能被忽略、处理和阻塞
@@ -41,7 +43,10 @@ ref：
 - http://www.cplusplus.com/reference/exception/exception/
 - https://isocpp.org/wiki/faq/exceptions#why-exceptions
 - https://stackoverflow.com/questions/2350489/how-to-catch-segmentation-fault-in-linux
-- http://gityuan.com/2015/12/20/signal/	
+- http://gityuan.com/2015/12/20/signal/
+- https://www.youtube.com/watch?v=uFBNf7F3l60
+- https://www.cnblogs.com/charlesblc/p/6277810.html
+- http://www.delorie.com/djgpp/doc/ug/interrupts/inthandlers1.html
 
 **/
 
