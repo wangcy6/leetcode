@@ -72,8 +72,19 @@
 
 - http://jm.taobao.org/2011/01/18/689/
 - LinkedHashMap vs ConcurrentHashMap
+- ConcurrentHashMap的锁分段技术可有效提升并发访问率 .put加锁 
+
+- get操作的高效之处在于整个get过程不需要加锁，除非读到的值是空才会加锁重读  ,
+- read:Java内存模型的happen before原则，对volatile字段的写入操作先于读操作  
+
+
 
 #### 熟悉的子问题
+
+这是阿里的实现
+
+- https://github.com/alibaba/tb_tddl/blob/master/tddl-common/src/main/java/com/taobao/tddl/common/util/LRUHashMap.java
+- https://github.com/alibaba/tb_tddl/blob/master/tddl-common/src/main/java/com/taobao/tddl/common/util/ConcurrentLRUHashMap.java
 
 
 
