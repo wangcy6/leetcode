@@ -28,16 +28,13 @@
 
 ### 五、技术的底层原理和关键实现
 
-- CThread
-- 
-
 ### 六、已有的实现和它之间的对比
 
 
 
 
 
-#  XC  
+#  共享内存 xc 
 
 >  耗时25*7
 
@@ -45,11 +42,17 @@
 
 
 
-场景 
+适用场景：
 
 - 进程是**CPU密集型**，不是IO密集型，数据缓存在本地，非远程。
 
-- 一个机器：如果数据缓存过大，无法启动多个进程并行处理，无法利用多核。需要共享内存保存一份数据。
+- 一个机器：一个进程数据缓存过大，造成无法启动多个进程并行处理，无法利用多核。需要共享内存保存一份数据。
+
+XC是把原有进程私有的静态的内存数据，通过统一的容器的方式，存储到共享内存中，
+
+减少减少每个进程对内存的要求，并支持高性能访问要求。
+
+- 容器化调动，一般进程方式。
 
 
 
@@ -69,11 +72,19 @@
 
 - 多读，少刷新，预先知道内存大小。
 
+- 一次性更新多个容器（表）
+
+  
+
 
 
 
 
 ### 四、技术的组成部分和关键点。
+
+
+
+XC加载类是线程不安全的,快照类是线程安全的(多线程同时操作不用加锁处理)
 
 
 
@@ -103,6 +114,18 @@ A:快照用完必须立即释放（这个很重要），否则会影响这个容
 
 
 
+高并发必须需要持久化
+
+- 防止单机故障，重启后加装，dump 采用sqlite3存储
+
+- l 一个事务可以包含多个容器的更新与创建
+
+  l 系统同一时间对同一容器只允许一个更新事务
+
+  l 系统支持更新异常时，下次自动恢复
+
+  l 一个事务支持同时对多个容器进行更新，并一次提交或则回退
+
 ### 五、技术的底层原理和关键实现
 
 入口：xc_console.cpp
@@ -111,7 +134,28 @@ CSnapshot
 
 - 构造时候无锁方式更新计数。模拟原子操作不停while循环处理semop 直到成功
 
+~~~
+CSnapshot::CSnapshot(const CTransaction &cTransaction) throw(XC_EXCEPTION) : m_pContainerGroup(NULL), m_strGroupName(cTransaction.GetGroupName().c_str())
+    {
+        m_pContainerGroup = cTransaction.GetContainerGroup();
+        CCounterMgr::GetInstance().PlusCounter(m_pContainerGroup->GetCounterIdx());
+    }
+
+    void CSnapshot::Release()
+    {
+        if (m_pContainerGroup != NULL)
+        {
+            CCounterMgr::GetInstance().MinusCounter(m_pContainerGroup->GetCounterIdx());
+            m_pContainerGroup = NULL;
+        }
+    }
+~~~
+
+
+
 - 技术点：信号量semaphore  https://github.com/golang/sync/blob/master/semaphore/semaphore.go
+
+  （ c语言的一般来说信号量和条件变量效果类似，前者主要进程 后者线程）
 
 CConsole
 
@@ -179,7 +223,10 @@ void CTransaction::Commit()
 
 
 
+安全
 
+- load A 读取数据，B放入临时内存 C 提交 **在提交时候才去加锁**，java内存模型更新也是如此。
+- "xc load from sqlite finish!  class CLoad4Sqlite : public CLoad
 
 ### 六、已有的实现和它之间的对比
 
@@ -188,3 +235,4 @@ void CTransaction::Commit()
 - Linux 读写锁实现 
 - 智能指针
 - ACID 事务原子性  WAL（Write-Ahead Logging）
+- docker专栏 你6个月没看了，订阅有何用。
