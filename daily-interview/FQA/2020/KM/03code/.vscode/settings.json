@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "*.c": "cpp",
-        "typeinfo": "cpp"
-    }
-}
