@@ -40,3 +40,16 @@ if a signal occurred while the system call was in progress
 
 简单做法 kill 发送信号
 ```
+
+
+
+- 软中断实际上是以内核线程的方式运行的，每个 CPU 都对应一个软中断内核线程，这个软中断内核线程就叫做  ksoftirqd/CPU 编号。那要怎么查看这些线程的运行状况呢？
+
+watch -d cat /proc/softirqs
+
+TIMER（定时中断）、NET_RX（网络接收）、SCHED（内核调度）、RCU（RCU 锁）
+
+~~~
+# -n DEV 表示显示网络收发的报告，间隔1秒输出一组数据$ sar -n DEV 1
+~~~
+
