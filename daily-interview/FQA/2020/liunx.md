@@ -53,3 +53,17 @@ TIMER（定时中断）、NET_RX（网络接收）、SCHED（内核调度）、R
 # -n DEV 表示显示网络收发的报告，间隔1秒输出一组数据$ sar -n DEV 1
 ~~~
 
+- ```
+  tcpdump -i eth0 tcp port 9821 -w 9821.dump
+  
+  
+  ```
+
+
+
+
+
+
+
+- ss -ltnp
+
