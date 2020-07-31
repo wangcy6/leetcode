@@ -34,16 +34,50 @@
  */
 
 // @lc code=start
-class NumArray {
+class NumArray
+{
 public:
-    NumArray(vector<int>& nums) {
-
+    NumArray(vector<int> &nums)
+    {
+        dp = nums;
+        for (int i = 1; i < nums.size(); i++)
+        {
+            dp[i] += dp[i - 1];
+        }
     }
-    
-    int sumRange(int i, int j) {
 
+    int sumRange(int i, int j)
+    {
+        return i == 0 ? dp[j] : dp[j] - dp[i - 1];
     }
+
+private:
+    vector<int> dp;
 };
+
+// class NumArray
+// {
+// private:
+//     int *sum;
+
+// public:
+//     NumArray(vector<int> &nums)
+//     {
+//         //sum[i] 为 nums[0 : i-1]的和
+//         sum = new int[nums.size() + 1];
+//         sum[0] = 0;
+//         for (int i = 1; i <= nums.size(); i++)
+//             sum[i] = sum[i - 1] + nums[i - 1];
+//     }
+//     ~NumArray()
+//     {
+//         delete[] sum;
+//     }
+//     int sumRange(int i, int j)
+//     {
+//         return sum[j + 1] - sum[i];
+//     }
+// };
 
 /**
  * Your NumArray object will be instantiated and called as such:
@@ -51,4 +85,3 @@ public:
  * int param_1 = obj->sumRange(i,j);
  */
 // @lc code=end
-
