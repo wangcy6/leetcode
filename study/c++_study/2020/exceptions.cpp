@@ -1,3 +1,4 @@
+
 // using standard exceptions
 #include <iostream>
 #include <exception>
@@ -57,12 +58,7 @@ ref：
 
 **/
 
-//liunx系统调用抛出异常
-void segfault_sigaction(int signal, siginfo_t *si, void *arg)
-{
-	printf("Caught segfault at address %p\n", si->si_addr);
-	exit(0); //进程退出
-}
+
 
 class myexception : public exception
 {
@@ -189,7 +185,12 @@ void test_segmentation()
 		std::cout << "test_segmentation ....." << std::endl;
 	}
 }
-
+//liunx系统调用抛出异常
+void segfault_sigaction(int signal, siginfo_t *si, void *arg)
+{
+	printf("Caught segfault at address %p\n", si->si_addr);
+	exit(0); //进程退出
+}
 void test_sig_segment()
 {
 	int *foo = NULL;
@@ -208,9 +209,6 @@ void test_sig_segment()
 int main()
 {
 	test_sig_segment();
-	test_segmentation();
-	testException();
-	test_out_of_range();
-	test_logic_error();
+	
 	return 0;
 }
