@@ -64,4 +64,27 @@ public:
         return dfs(root->left, true) + dfs(root->right, false);
     }
 };
+
+func sumOfLeftLeaves(root* TreeNode) int {
+
+    return dfs(root, false)
+}
+
+func dfs(root* TreeNode, left bool) int
+{
+    //不是判断叶子节点，这里判断root ==nil 干什么，case [1],[nil]
+    if nil
+        == root
+        {
+            return 0
+        }
+
+    if nil
+        == root.Left&& nil == root.Right && true == left
+        {
+            return root.Val
+        }
+    //切记 每个节点全部遍历,通过root节点是无法判断整个tree情况
+    return dfs(root.Left, true) + dfs(root.Right, false)
+}
 // @lc code=end
