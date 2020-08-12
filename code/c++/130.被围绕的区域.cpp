@@ -49,6 +49,9 @@
  * 熟悉子问题：
  * 1. 给我一个二维数组，我只会i j 从 0开始遍历
  * 2. 从边界开始向内部扩散的
+ *  https://leetcode-cn.com/problems/surrounded-regions/solution/dao-yu-wen-ti-zhi-bei-wei-rao-de-qu-yu-cicada-by-a/
+ * 
+ * https://leetcode-cn.com/problems/surrounded-regions/solution/bei-wei-rao-de-qu-yu-by-leetcode-solution/
  */
 
 // @lc code=start
@@ -56,48 +59,55 @@ class Solution {
 public:
     void solve(vector<vector<char>>& board)
     {
-    }
-};
-// @lc code=end
-class Solution {
-public:
-    int n, m;
 
-    void dfs(vector<vector<char>>& board, int x, int y)
-    {
-        if (x < 0 || x >= n || y < 0 || y >= m || board[x][y] != 'O') {
+        int rows = board.size();
+        if (0 == rows)
             return;
+        int cols = board[0].size();
+        // dfs遍历 遍历边界节点的连通性 标记为#
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                //直接无法找到找到所有被 'X' 围绕的区域,从外围'O'开始
+                if ((i == 0 || j == 0 || i == rows - 1 || j == cols - 1) && board[i][j] == 'O') {
+                    dfs(board, i, j);
+                }
+            }
         }
-        board[x][y] = 'A';
-        dfs(board, x + 1, y);
-        dfs(board, x - 1, y);
-        dfs(board, x, y + 1);
-        dfs(board, x, y - 1);
-    }
+        //第二次遍历
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
 
-    void solve(vector<vector<char>>& board)
-    {
-        n = board.size();
-        if (n == 0) {
-            return;
-        }
-        m = board[0].size();
-        for (int i = 0; i < n; i++) {
-            dfs(board, i, 0);
-            dfs(board, i, m - 1);
-        }
-        for (int i = 1; i < m - 1; i++) {
-            dfs(board, 0, i);
-            dfs(board, n - 1, i);
-        }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (board[i][j] == 'A') {
-                    board[i][j] = 'O';
-                } else if (board[i][j] == 'O') {
+                if (board[i][j] == 'O') {
                     board[i][j] = 'X';
+                }
+                if (board[i][j] == '#') {
+                    board[i][j] = 'O';
                 }
             }
         }
     }
+
+    void dfs(vector<vector<char>>& board, int i, int j)
+    {
+
+        // * X X X X
+        // * X O O X
+        // * X X O X
+        // * X X O X
+        //递归结束条件
+        // if (i < 0 || j < 0 || i >= board.size() || j >= board[0].size() || board[i][j] == 'X') {
+        //# --> <--- #
+        if (i < 0 || j < 0 || i >= board.size() || j >= board[0].size() || board[i][j] == 'X' || board[i][j] == '#') {
+            return;
+        }
+        //业务逻辑
+        board[i][j] = '#'; //被包围的 和没有被包围的区分
+        //递归逻辑
+        dfs(board, i + 1, j);
+        dfs(board, i - 1, j);
+        dfs(board, i, j + 1);
+        dfs(board, i, j - 1);
+    }
 };
+// @lc code=end
+
