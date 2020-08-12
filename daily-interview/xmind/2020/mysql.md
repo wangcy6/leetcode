@@ -5,12 +5,51 @@ description: " 你明明知道数据库是你弱点，你为什么不现在补�
 draft: false
 tags: ["mysql"]
 categories: ["book"]
-
 ---
 
 
 
+
+
+
+
 - 
+
+
+
+- https://juejin.im/post/6844903773203070983 Redis集群一致性Hash效果的代码演示
+
+- https://testerhome.com/topics/12175/show_wechat 30分钟
+
+
+
+- 27 | 主库出问题了，从库怎么办？
+
+在一主多从架构下，主库故障后的主备切换问题。
+
+
+
+问：一致性hash和redis集群hash差别 ？很多人都说不一样，
+
+答：一致性哈希算法（2^32） 和redis 16384（2^14）拆分数据，在这方面其实没有什么差别
+
+ 差别前者是机器均分的 这些key，后者16384都是虚拟节点来拆分分摊到具体机器上。其实都是虚拟一致性hash
+
+前者通过代理来实现。后者通过db本身实现。这个主要区别吧。
+
+
+
+
+
+
+
+
+
+![![](E:Java NotePersonalNote分布式架构理论image虚拟节点.JPG)](https://segmentfault.com/img/bVbwQCJ)
+
+
+
+
 
 
 
