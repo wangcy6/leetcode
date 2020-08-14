@@ -1,6 +1,8 @@
 
 
+ 
 
+> 这里主要介绍，一个普通2G内存云主机如何编译Tidb过程。
 
 ### 环境准备
 
@@ -8,7 +10,7 @@
 
 | 软件   | 版本  | 备注                     |
 | ------ | ----- | ------------------------ |
-| Ubuntu | 18.04 | 1G内存不行改为2G         |
+| Ubuntu | 18.04 | 1G内存不行改为2G，vpn    |
 | go     | 1.15  | export GOPATH=/data/tidb |
 | gcc    | 7.5.0 |                          |
 
@@ -87,38 +89,12 @@ release:
 可以打印详细时间
 
 SYSTEM_ALLOC=1 make release //去掉jemalloc，https://github.com/tikv/tikv/pull/6211 
-RUST_BACKTRACE=1 make build //gcc版本不对 https://github.com/tikv/tikv/issues/8153
+
+Finished release [optimized] target(s) in 85m 22s //编译85分钟
 
 ~~~
 
-- 遇到的问题
 
-~~~
-Makefile:388: recipe for target 'src/jemalloc.o' failed
-make[1]: Leaving directory '/data/tidb/src/github.com/pingcap/tikv/target/debug/build/tikv-jemalloc-sys-78bb871ae33d0d9d/out/build'
-
---- stderr
-
-cc1: out of memory allocating 412392 bytes after a total of 87506944 bytes
-make[1]: *** [src/jemalloc.o] Error 1
-make[1]: *** Waiting for unfinished jobs..
-
-
-l" "-ldl" "-lutil"
-  = note: 
-          /usr/bin/ld: out of memory allocating 362368 bytes after a total of 850800640 bytes
-          collect2: error: ld returned 1 exit status
-          
-
-error: aborting due to previous error
-
-error: could not compile `cmd`.
-
-To learn more, run the command again with --verbose.
-warning: build failed, waiting for other jobs to finish...
-error: build failed
-https://github.com/tikv/tikv/issues/8153
-~~~
 
 
 
@@ -128,7 +104,7 @@ FQA
 
 #### mysql
 
-~~~
+~~~shell
 
 ~~~
 
@@ -137,12 +113,49 @@ FQA
 #### 启动
 
 ~~~shell
-cp pd-server tikv-server  tidb-server /data/tidb/bin
+cd /data/tidb/src/github.com/pingcap
+cp ./pd/bin/pd-server  /data/tidb/bin/
+cp ./tidb/bin/tidb-server /data/tidb/bin
+cp ./tikv/target/release/tikv-server /data/tidb/bin/
 ~~~
 
 
 
+- 步骤一，启动 PD
 
+```
+nohup pd-server --data-dir=pd \
+                --log-file=./pd.log 2>&1 &
+```
+
+- 步骤二，启动 TiKV
+
+```shell
+nohup tikv-server --pd="127.0.0.1:2379" \
+                  --data-dir=tikv \
+                  --log-file=tikv.log 2>&1 &
+```
+
+- 步骤三，启动 TiDB
+
+```
+nohup tidb-server --store=tikv \
+                  --path="127.0.0.1:2379" \
+                  --log-file=tidb.log 2>&1 &
+```
+
+- 步骤四，TiDB 启动事务时，能打印出一个 “hello transaction” 的 日志:
+
+```shell
+mysql -h 127.0.0.1 -P 4000 -u root -D test
+
+TiDB 启动事务时，能打印出一个 “hello transaction” 的 日志
+START TRANSACTION;
+select "hello transaction" as strings into outfile './test.txt';
+
+root@money:/data/tidb/bin# cat test.txt 
+hello transaction
+```
 
 
 
