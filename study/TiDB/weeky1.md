@@ -51,6 +51,7 @@ cd /data/tidb/src/github.com/pingcap
 
 git clone https://github.com/pingcap/tidb
 cd tidb
+make
 
 遇到问题：
 1. 腾讯云上直接下载代码超级慢慢，改为window下载
@@ -63,6 +64,7 @@ cd tidb
 
 ~~~shell
 git clone https://github.com/pingcap/pd
+make
 ~~~
 
 
@@ -155,9 +157,13 @@ select "hello transaction" as strings into outfile './test.txt';
 
 root@money:/data/tidb/bin# cat test.txt 
 hello transaction
+
 ```
 
+画外音：
 
+- 上面做法对题目理解不正确，没认真审题。
+- 这个得知道一条sql下去怎么在源码跑到tikv的哦。至少流程得过一下
 
 
 
