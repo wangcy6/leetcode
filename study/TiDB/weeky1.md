@@ -2,7 +2,13 @@
 
  
 
-> 这里主要介绍，一个普通2G内存云主机如何编译Tidb过程。
+
+
+
+
+
+
+> 一个普通2G内存云主机如何编译Tidb过程。机器配置太低，只启动一个Tikv
 
 ### 环境准备
 
@@ -117,8 +123,9 @@ FQA
 ~~~shell
 cd /data/tidb/src/github.com/pingcap
 cp ./pd/bin/pd-server  /data/tidb/bin/
-cp ./tidb/bin/tidb-server /data/tidb/bin
 cp ./tikv/target/release/tikv-server /data/tidb/bin/
+
+cp ./bin/tidb-server /data/tidb/bin/
 ~~~
 
 
@@ -141,17 +148,20 @@ nohup tikv-server --pd="127.0.0.1:2379" \
 - 步骤三，启动 TiDB
 
 ```
-nohup tidb-server --store=tikv \
+cp ./bin/tidb-server /data/tidb/bin/
+cd /data/tidb/bin/
+nohup ./tidb-server --store=tikv \
                   --path="127.0.0.1:2379" \
                   --log-file=tidb.log 2>&1 &
 ```
 
-- 步骤四，TiDB 启动事务时，能打印出一个 “hello transaction” 的 日志:
+- 步骤四，测试
 
 ```shell
+
 mysql -h 127.0.0.1 -P 4000 -u root -D test
 
-TiDB 启动事务时，能打印出一个 “hello transaction” 的 日志
+TiDB 启动事务时，能打印出一个 “hello transaction”的 日志
 START TRANSACTION;
 select "hello transaction" as strings into outfile './test.txt';
 
