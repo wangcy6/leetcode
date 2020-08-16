@@ -1,14 +1,29 @@
 
 
- 
+### 任务
+~~~
+本地下载 TiDB，TiKV，PD 源代码，改写源码并编译部署以下环境：
+
+1 TiDB
+1 PD
+3 TiKV
+改写后：使得 TiDB 启动事务时，能打印出一个 “hello transaction” 的 日志
+~~~
+
+### 输出：
+- 搭建输出
+![select * from information_schema.cluster_info](https://i.loli.net/2020/08/15/974tcSm58WuoeC2.png)
+- 修改代码，输出日志
+![image.png](https://i.loli.net/2020/08/16/jSLJvU4OhBgsHlT.png)
+![image.png](https://i.loli.net/2020/08/16/uNnlLsX6Tq83KA5.png)
+
+![image.png](https://i.loli.net/2020/08/16/udTbjSv1m98XHfV.png)
 
 
 
+>1. 一个普通2G内存云主机如何编译Tidb过程。机器配置太低，只启动一个Tikv
 
-
-
-
-> 一个普通2G内存云主机如何编译Tidb过程。机器配置太低，只启动一个Tikv
+>2. 一个sql语句是如何执行的。
 
 ### 环境准备
 
@@ -21,7 +36,7 @@
 | gcc    | 7.5.0 |                          |
 
 
-
+![TiDB 整体架构](https://user-images.githubusercontent.com/5937331/90312675-dc92eb00-df38-11ea-89ea-df88785e0133.png)
 
 
 
@@ -170,15 +185,45 @@ hello transaction
 
 ```
 
-画外音：
+## 一个sql是如何执行的【任务：启动事务时候打印日志】
 
-- 上面做法对题目理解不正确，没认真审题。
-- 这个得知道一条sql下去怎么在源码跑到tikv的哦。至少流程得过一下
+目录：
+
+- 服务器如何接受客户端连接
+- 如何从IO中读取sql
+- 一个sql是如何执行的
+- 事务部分
+
+--------------------------------------------------------------------
+
+
+
+![image](https://user-images.githubusercontent.com/5937331/90312522-be78bb00-df37-11ea-96fa-5931a847fe14.png)
+
+![SQL 层执行过程](https://download.pingcap.com/images/blog-cn/tidb-source-code-reading-3/2.png)
+
+
+
+![image](https://user-images.githubusercontent.com/5937331/90312699-0e0bb680-df39-11ea-9888-6fc0313a45cf.png)
+
+#### 代码部分
+
+
+
+一条 SQL 语句需要经过，语法解析–>合法性验证–>制定查询计划–>优化查询计划–>根据计划生成查询器–>执行并返回结果 等一系列流程。
+
+
+
+这个主干对应于 TiDB 的下列包：
+
+![image](https://user-images.githubusercontent.com/5937331/90312730-6347c800-df39-11ea-9d79-6f361e9ebd8f.png)
+
+
 
 
 
 ### ref
 
-
+- TiDB 源码阅读系列文章
 
 - http://129.28.165.167:1313/post/book/tiDB
