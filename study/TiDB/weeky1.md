@@ -19,7 +19,7 @@
 
 ![image.png](https://i.loli.net/2020/08/16/udTbjSv1m98XHfV.png)
 
-
+### 目录
 
 >1. 一个普通2G内存云主机如何编译Tidb过程。机器配置太低，只启动一个Tikv
 
@@ -62,7 +62,7 @@ go version go1.15 linux/amd64
 
 
 
-####  tidb
+####  tidb（vpn下载第三方包）
 
 ~~~shell
 
@@ -70,14 +70,9 @@ mkdir -p /data/tidb/src/github.com/pingcap
 
 cd /data/tidb/src/github.com/pingcap
 
-git clone https://github.com/pingcap/tidb
+git clone https://github.com/pingcap/tidb.git
 cd tidb
 make
-
-遇到问题：
-1. 腾讯云上直接下载代码超级慢慢，改为window下载
-
-
 
 ~~~
 
@@ -90,7 +85,7 @@ make
 
 
 
-#### TiKV 
+#### TiKV （重点）
 
 >TiKV 是一个分布式事务型的键值数据库，提供了满足 ACID 约束的分布式事务接口，并且通过 [Raft 协议](https://raft.github.io/raft.pdf) 保证了多副本数据一致性以及高可用,TiKV 参考 Spanner 设计了 multi raft-group 的副本机制 https://raft.github.io/
 
@@ -128,7 +123,7 @@ FQA
 #### mysql
 
 ~~~shell
-
+主要使用客户端命令.
 ~~~
 
 
@@ -176,12 +171,6 @@ nohup ./tidb-server --store=tikv \
 
 mysql -h 127.0.0.1 -P 4000 -u root -D test
 
-TiDB 启动事务时，能打印出一个 “hello transaction”的 日志
-START TRANSACTION;
-select "hello transaction" as strings into outfile './test.txt';
-
-root@money:/data/tidb/bin# cat test.txt 
-hello transaction
 
 ```
 
@@ -206,9 +195,9 @@ hello transaction
 
 ![image](https://user-images.githubusercontent.com/5937331/90312699-0e0bb680-df39-11ea-9888-6fc0313a45cf.png)
 
-#### 代码部分
+#### 代码部分(最新代码)
 
-
+s.listener.Accept() -->go s.onConn(clientConn)-->dispatch()--->handleQuery()
 
 一条 SQL 语句需要经过，语法解析–>合法性验证–>制定查询计划–>优化查询计划–>根据计划生成查询器–>执行并返回结果 等一系列流程。
 
@@ -225,5 +214,7 @@ hello transaction
 ### ref
 
 - TiDB 源码阅读系列文章
-
+  TiDB 源码阅读系列文章（三）SQL 的一生
+  TiDB 源码阅读系列文章（四）Insert 语句概览
 - http://129.28.165.167:1313/post/book/tiDB
+- https://github.com/wangcy6/leetcode/blob/master/study/TiDB/weeky1.md
