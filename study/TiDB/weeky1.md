@@ -1,5 +1,5 @@
 
-
+>说明：该文章随时在更新。
 ### 任务
 ~~~
 本地下载 TiDB，TiKV，PD 源代码，改写源码并编译部署以下环境：
@@ -174,6 +174,9 @@ mysql -h 127.0.0.1 -P 4000 -u root -D test
 
 ```
 
+
+
+
 ## 一个sql是如何执行的【任务：启动事务时候打印日志】
 
 目录：
@@ -218,3 +221,115 @@ s.listener.Accept() -->go s.onConn(clientConn)-->dispatch()--->handleQuery()
   TiDB 源码阅读系列文章（四）Insert 语句概览
 - http://129.28.165.167:1313/post/book/tiDB
 - https://github.com/wangcy6/leetcode/blob/master/study/TiDB/weeky1.md
+
+--------------------------------下面是第二周的预习----------------------------
+
+--------------------------------下面是第二周的预习----------------------------
+
+--------------------------------下面是第二周的预习----------------------------
+
+### update 2020年8月18日19:22:17
+
+
+### tidb-dashboard
+
+- 学习中
+http://127.0.0.1:2379/dashboard
+http://www.mytidb.com:2379/dashboard
+
+
+~~~
+
+ [dynamic_config_manager.go:168] ["Failed to load dynamic config from etcd"] [error="context deadline exceeded"]
+
+~~~
+
+
+### sysbench 安装
+
+- 学习中
+~~~
+
+apt-get install libmysqlclient-dev
+mkdir -p /tmp/sysbench
+cd /tmp/sysbench
+wget https://github.com/akopytov/sysbench/archive/1.0.14.tar.gz
+yum -y install make automake libtool pkgconfig libaio-devel
+yum -y install mariadb-devel
+./autogen.sh
+./configure
+make -j
+make install
+sysbench --version 
+~~~
+
+- ERROR: cannot find MySQL libraries. If you want to compile with MySQL support,
+apt-get install libmysqlclient-dev
+
+
+### 使用 TiUP 部署 TiDB 集群
+
+- 学习中
+
+tiup cluster deploy <cluster-name> <tidb-version> ./topo.yaml --user root -p
+参数 <cluster-name> 表示设置集群名称
+参数 <tidb-version> 表示设置集群版本，可以通过 tiup list tidb 命令来查看当前支持部署的 TiDB 版本
+
+tiup cluster deploy tidb-test v4.0.0 ./topology.yaml --user root [-p] [-i /home/root/.ssh/gcp_rsa]
+
+~~~
+# # Global variables are applied to all deployments and used as the default value of
+# # the deployments if a specific deployment value is missing.
+global:
+ user: "tidb"
+ ssh_port: 22
+ deploy_dir: "/tidb-deploy"
+ data_dir: "/tidb-data"
+
+# # Monitored variables are applied to all the machines.
+monitored:
+ node_exporter_port: 9100
+ blackbox_exporter_port: 9115
+
+server_configs:
+ tidb:
+   log.slow-threshold: 300
+ tikv:
+   readpool.storage.use-unified-pool: false
+   readpool.coprocessor.use-unified-pool: true
+ pd:
+   replication.enable-placement-rules: true
+ tiflash:
+   logger.level: "info"
+
+pd_servers:
+ - host: 10.0.1.1
+
+tidb_servers:
+ - host: 10.0.1.1
+
+tikv_servers:
+ - host: 10.0.1.1
+   port: 20160
+   status_port: 20180
+
+ - host: 10.0.1.1
+   port: 20161
+   status_port: 20181
+
+ - host: 10.0.1.1
+   port: 20162
+   status_port: 20182
+
+tiflash_servers:
+ - host: 10.0.1.1
+
+monitoring_servers:
+ - host: 10.0.1.1
+
+grafana_servers:
+ - host: 10.0.1.1
+~~~
+
+### ref
+ - TIDB 优化--TiKV 性能参数调优
