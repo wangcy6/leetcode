@@ -331,5 +331,32 @@ grafana_servers:
  - host: 10.0.1.1
 ~~~
 
+```shell
+tiup cluster start <cluster-name>
+tiup cluster start tidb-test
+
+http://www.mytidb.com:2379/dashboard/
+访问集群：
+
+访问 TiDB 数据库，密码为空：
+
+mysql -h 10.0.1.1 -P 4000 -u root
+访问 TiDB 的 Grafana 监控：
+
+通过 http://www.mytidb.com:3000 访问集群 Grafana 监控页面，默认用户名和密码均为 admin。
+ http:/www.mytidb.com:3000
+访问 TiDB 的 Dashboard：
+
+通过 http://{pd-ip}:2379/dashboard 访问集群 TiDB Dashboard 监控页面，默认用户名为 root，密码为空。
+http://www.mytidb.com:2379/dashboard/
+执行以下命令确认当前已经部署的集群列表：
+
+tiup cluster list
+执行以下命令查看集群的拓扑结构和状态：
+
+tiup cluster display <cluster-name>
+```
+
 ### ref
+
  - TIDB 优化--TiKV 性能参数调优
