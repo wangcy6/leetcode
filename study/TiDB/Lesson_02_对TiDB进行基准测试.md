@@ -39,15 +39,57 @@
 
 
 
-### 测试用例1
+## 测试方案1
 
 tiup cluster deploy tidb-test v4.0.0 ./topology1.yaml --user root -p
 
-| 拓扑结构 | 个数 | host   |
-| -------- | ---- | ------ |
-| Tidb     | 1    | 同一个 |
-| pd       | 1    | 同一个 |
-| TiKV     | 1    | 同一个 |
+| 拓扑结构 | 个数 | 关键参数 |
+| -------- | ---- | -------- |
+| Tidb     | 1    |          |
+| pd       | 1    | 同一个   |
+| TiKV     | 1    | 同一个   |
 
 
+
+####  sysbench
+
+
+
+- 准备数据：
+
+  sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 prepare
+
+
+
+- 测试命令
+
+    sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 run
+
+
+
+
+
+
+
+
+
+
+
+> 采用默认脚本：/usr/local/share/sysbench
+>
+> sysbench-thread-1.cfg 执行 :%s/^M//g　来去掉^M
+>
+> sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 prepare
+
+
+
+
+
+####   go-ycsb
+
+####   go-tpc
+
+
+
+### 测试用例2
 

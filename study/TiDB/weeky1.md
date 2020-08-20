@@ -171,6 +171,12 @@ nohup ./tidb-server --store=tikv \
 
 mysql -h 127.0.0.1 -P 4000 -u root -D test
 
+设置密码：
+mysql -h 127.0.0.1 -P 4000 -u root
+
+SET PASSWORD FOR 'root'@'%' = '123456'
+
+mysql -h 127.0.0.1 -P 4000 -u root  -p 
 
 ```
 
