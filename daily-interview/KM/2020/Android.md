@@ -2,7 +2,7 @@
 
 # Android 开发环境
 
-###  1 Ubuntu下全命令行搭建Android开发环境
+###   Ubuntu下全命令行搭建Android开发环境
 
 Contents
 
@@ -126,9 +126,34 @@ https://downloads.gradle-dn.com/distributions/gradle-6.1-bin.zip
 
 
 
+该是使用了之前的android studio的配置文件。
+将 C:Usersxxxx.AndroidStudio3.1 这个目录删除，重新启动android studio即可。
 
 
-### 2 adb命令
+
+
+
+### window 下载
+
+
+
+- 选择最新版本：Android Studio 4.1
+
+​     https://redirector.gvt1.com/edgedl/android/studio/ide-zips/4.0.1.0/android-studio-ide-193.6626763-windows.zip
+
+- 去掉http代理设置，自动更新
+
+
+
+
+
+FQA
+
+- https://segmentfault.com/q/1010000012736703
+
+
+
+### adb命令
 
 
 
