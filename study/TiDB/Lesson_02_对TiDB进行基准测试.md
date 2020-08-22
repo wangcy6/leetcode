@@ -193,7 +193,7 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 ​	
 
-![image-20200820193026130](../images/image-20200820193026130.png)
+![image-20200820193026130.png](https://i.loli.net/2020/08/22/4iVoILuNCyBWaAl.png)
 
 
 
@@ -213,7 +213,7 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 > 采用默认脚本：/usr/local/share/sysbench
 >
-> sysbench-thread-1.cfg 执行 :%s/^M//g　来去掉^M
+> sysbench-thread-1.cfg 执行 :%s/^M//g　来去掉^M ^M是使用 "CTRL-V CTRL-M"
 >
 
 
@@ -277,9 +277,100 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 
 
+- 测试分析：
+
+1. 普通机器占用大量cpu 和io操作， Grafana上数据已经无法刷新 top 执行缓慢，后面改为sysbench测试。
+
+2. 性能分析火焰显示 耗时比较大，**需要调整线程个数优化**，**磁盘存储方式需要优化**
+
+   - gRPC 线程池是 TiKV 所有读写请求的总入口，它会把不同任务类型的请求转发给不同的线程池。
+
+   ● Scheduler 线程池负责检测写事务冲突，把事务的两阶段提交、悲观锁上锁、事务回滚等请求转化为 key-value 对数组，然后交给 Store 线程进行 Raft 日志复制。
+
+   ● Raftstore 线程池负责处理所有的 Raft 消息以及添加新日志的提议（Propose）、将日志写入到磁盘，当日志在 Raft Group 中达成多数一致（即 Raft 论文中描述的 Commit Index）后，它就会把该日志发送给 Apply 线程。
+
+https://github.com/pingcap-incubator/tidb-in-action/blob/master/session4/chapter8/threadpool-optimize.md
 
 
 
+- 测试数据
+
+> warehouses 配置50 直接oom，调整为5
+
+~~~shell
+top：
+%Cpu0  :  2.9 us, 45.3 sy,  0.0 ni,  0.5 id, 33.5 wa,  0.0 hi, 17.8 si,  0.0 st
+%Cpu1  :  3.7 us, 34.9 sy,  0.0 ni,  3.3 id, 57.9 wa,  0.0 hi,  0.2 si,  0.0 st
+%Cpu2  :  2.6 us, 40.4 sy,  0.0 ni,  0.7 id, 56.3 wa,  0.0 hi,  0.0 si,  0.0 st
+
+%wa指CPU等待磁盘写入完成的时间
+
+root@money:/data/tidb/src/github.com/pingcap/go-tpc# iostat -d 3
+Linux 4.15.0-20-generic (money)         08/22/2020      _x86_64_        (3 CPU)
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda              20.35       827.41       187.53  633818569  143651781
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda            8337.66    477942.86        71.43    1472064        220
+
+pidstat 2：
+
+05:17:08 PM   UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+05:17:12 PM     0         7    0.00    4.47    0.00    1.88    4.47     0  ksoftirqd/0
+05:17:12 PM     0         8    0.00    0.71    0.00    4.94    0.71     2  rcu_sched
+05:17:12 PM     0        48    0.00   84.24    0.00   13.41   84.24     0  kswapd0
+05:17:12 PM     0       176    0.00    0.71    0.00    0.71    0.71     0  kworker/0:1H
+05:17:12 PM     0       177    0.00    0.47    0.00    0.00    0.47     1  kworker/1:1H
+05:17:12 PM     0       196    0.00    0.24    0.00    0.24    0.24     1  jbd2/sda2-8
+05:17:12 PM     0       221    0.00    0.47    0.00    0.24    0.47     2  kworker/2:1H
+05:17:12 PM     0       237    0.24    3.06    0.00   32.71    3.29     2  systemd-journal
+05:17:12 PM     0       377    0.00    0.94    0.00   13.18    0.94     1  haveged
+05:17:12 PM     0       466    0.24    2.59    0.00   29.88    2.82     1  supervisord
+05:17:12 PM   106       511    0.00    5.18    0.00    0.00    5.18     0  mysqld
+05:17:12 PM     0      1040    0.00    2.35    0.00   23.76    2.35     2  qemu-ga
+05:17:12 PM     0      2931    0.00    0.71    0.00    1.88    0.71     2  ss-server
+05:17:12 PM  1000      5904    1.41    8.24    0.00    0.00    9.65     1  pd-server
+05:17:12 PM  1000      6046    0.24    9.65    0.00    0.00    9.88     0  node_exporter
+05:17:12 PM     0      6048    0.00    0.24    0.00    1.41    0.24     1  kworker/1:5
+05:17:12 PM  1000      6297    2.59   28.71    0.00    0.00   31.29     1  tikv-server
+05:17:12 PM  1000      6891    0.94    8.47    0.00    0.00    9.41     1  tidb-server
+05:17:12 PM  1000      7177    1.88    8.24    0.00    0.00   10.12     1  prometheus
+05:17:12 PM  1000      7320    0.24    9.41    0.00    0.00    9.65     0  grafana-server
+05:17:12 PM     0      7931    0.47    4.71    0.00   14.82    5.18     1  pidstat
+05:17:12 PM     0      7933    0.24    2.59    0.00   29.88    2.82     2  TryEverything
+05:17:12 PM     0      7934    0.00    2.82    0.00   30.59    2.82     1  cron
+05:17:12 PM     0     25017    0.00    0.47    0.00    1.18    0.47     0  kworker/0:0
+05:17:12 PM     0     26931    0.24    1.41    0.00    2.82    1.65     0  sshd
+05:17:12 PM     0     27107    0.00    0.24    0.00    1.18    0.24     2  kworker/2:0
+
+ vmstat 2
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 0 24 435652  53104    996  35740    0    1   320    35   15   12  2  1 96  0  0
+22  8 435652  53436    304  34956    0    0 364564    30 10720 12733  8 41  2 49  0
+ 0 31 435652  53172    256  36388    0    0 345682    36 9774 11017 13 51  1 35  0
+ 1 20 435652  53524    304  36220    0    0 371180   194 10769 12635  4 49  1 46  0
+11 20 435652  52984    308  36208    0    0 307372    92 9960 12274  5 40  0 56  0
+~~~
+
+
+
+![image.png](https://i.loli.net/2020/08/22/fHQRktDo8ONL7lX.png)
+
+![image.png](https://i.loli.net/2020/08/22/lQmcPez7XkjAa9O.png)
+
+
+
+![image.png](https://i.loli.net/2020/08/22/H7Yqm4IWVlAh8ev.png)
+
+![image.png](https://i.loli.net/2020/08/22/inKUuNCVhoQSZHI.png)
+
+![image.png](https://i.loli.net/2020/08/22/rIqhvPbOmZpk4x6.png)
+
+![image.png](https://i.loli.net/2020/08/22/Z6SiR4ualOP5s9F.png)
+
+![image.png](https://i.loli.net/2020/08/22/tqmKHCsZbIUAP3v.png)
 
 - 背景知识：
 
@@ -301,49 +392,78 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 git clone https://github.com/pingcap/go-tpc.git
 make build
 
-# Create 1000 warehouses by HASH 
-./bin/go-tpc tpcc -H 127.0.0.1  -P  4000 -D tpcc --warehouses 1000    prepare  -T 3 &
+# Create 10 warehouses by HASH 
+./bin/go-tpc tpcc -H 127.0.0.1  -P 4000 -U root -p 123456 -D tpcc --warehouses 5   prepare  -T 1 
 
 # Run TPCC workloads, you can just run or add --wait option to including wait times
-./bin/go-tpc tpcc -H 127.0.0.1  -P  4000 -D tpcc --warehouses 1000  run  -T 3 &
+./bin/go-tpc tpcc -H 127.0.0.1  -P 4000 -U root -p 123456 -D tpcc --warehouses 5   run  -T 1 
 
 # Cleanup
-./bin/go-tpc tpcc --warehouses 1000 cleanup
+./bin/go-tpc tpcc --warehouses 50 cleanup
+
+内存不够：
+warehouses= 50 cpu 100%利用，不能在高了
+execute prepare failed, err load stock at warehouse 40 failed Error 9002: TiKV server timeout
+pd server 直接 core
+
+tiup cluster display tidb-test
+
+
+Starting component `cluster`: /root/.tiup/components/cluster/v1.0.9/tiup-cluster display tidb-test
+tidb Cluster: tidb-test
+tidb Version: v4.0.0
+ID               Role        Host       Ports        OS/Arch       Status      Data Dir                                   Deploy Dir
+--               ----        ----       -----        -------       ------      --------                                   ----------
+127.0.0.1:3000   grafana     127.0.0.1  3000         linux/x86_64  Up          -                                          /data/tidb/tiup/tidb-deploy/grafana-3000
+127.0.0.1:2379   pd          127.0.0.1  2379/2380    linux/x86_64  Down        /data/tidb/tiup/tidb-data/pd-2379          /data/tidb/tiup/tidb-deploy/pd-2379
+127.0.0.1:9090   prometheus  127.0.0.1  9090         linux/x86_64  activating  /data/tidb/tiup/tidb-data/prometheus-9090  /data/tidb/tiup/tidb-deploy/prometheus-9090
+127.0.0.1:4000   tidb        127.0.0.1  4000/10080   linux/x86_64  Up          -                                          /data/tidb/tiup/tidb-deploy/tidb-4000
+127.0.0.1:20160  tikv        127.0.0.1  20160/20180  linux/x86_64  Down        /data/tidb/tiup/tidb-data/tikv-20160       /data/tidb/tiup/tidb-deploy/tikv-20160
+[ 7849.183484] Out of memory: Kill process 14859 (rustc) score 579 or sacrifice child
+[ 7849.183715] Killed process 14859 (rustc) total-vm:2032712kB, anon-rss:1299156kB, file-rss:0kB, shmem-rss:0kB
+[ 7849.324714] oom_reaper: reaped process 14859 (rustc), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+
 
 Usage:
   go-tpc [command]
 
-Available Commands:
-  ch          
-  help        Help about any command
-  tpcc        
-  tpch        
-
-Flags:
-  -t, --acThreads int       OLAP client concurrency, only for CH-benCHmark (default 1)
-      --count int           Total execution count, 0 means infinite
   -D, --db string           Database name (default "test")
-  -d, --driver string       Database driver: mysql
-      --dropdata            Cleanup data before prepare
-  -h, --help                help for go-tpc
   -H, --host string         Database host (default "127.0.0.1")
-      --ignore-error        Ignore error when running workload
-      --interval duration   Output interval time (default 10s)
-      --isolation int       Isolation Level 0: Default, 1: ReadUncommitted, 
-                            2: ReadCommitted, 3: WriteCommitted, 4: RepeatableRead, 
-                            5: Snapshot, 6: Serializable, 7: Linerizable
-      --max-procs int       runtime.GOMAXPROCS
   -p, --password string     Database password
   -P, --port int            Database port (default 4000)
-      --pprof string        Address of pprof endpoint
-      --silence             Don't print error when running workload
-  -T, --threads int         Thread concurrency (default 1)
-      --time duration       Total execution time (default 2562047h47m16.854775807s)
   -U, --user string         Database user (default "root")
+
+  mysql -h 127.0.0.1 -P 4000 -u root  -p 
+  SET PASSWORD FOR 'root'@'%' = '123456'
   
 ~~~
 
 
+
+- 内部不足OOM 需要重启
+
+
+
+```bash
+tiup cluster deploy tidb-test v4.0.0 ./topology1.yaml --user root -p ##部署
+tiup cluster start tidb-test ##别忘记启动呀！！！
+
+tiup cluster display tidb-test  ##查询
+tiup cluster list ##查询
+tiup cluster start tidb-test
+
+tiup cluster start tidb-test  -R pd ## 单独启动
+ 
+tiup cluster stop tidb-test
+tiup cluster destroy tidb-test
+retry error: operation timed out after 2m0s
+        tikv 127.0.0.1:20160 failed to start: timed out waiting for port 20160 to be started after 2m0s, please check the log of the instance
+
+Error: failed to start tikv:    tikv 127.0.0.1:20160 failed to start: timed out waiting for port 20160 to be started after 2m0s, please check the log of the instance: timed out waiting for port 20160 to be started after 2m0s
+
+Verbose debug logs has been written to /root/logs/tiup-cluster-debug-2020-08-22-15-29-57.log.
+
+```
 
 
 
@@ -359,7 +479,42 @@ https://asktug.com/_/tidb-performance-map/#/tikv
 
 
 
+> 预期输出：
+>
+> 1. 通过观察gRPC 一直停留send中，存在IO阻塞，对cpu消耗不是很大。
+>
+>    本机内核默认3核，什么做请看下存在2k-9k上下去切换，存在大量cpu io wa ，线程个数server.grpc-concurrency 为2，
+>
+> 2. raftstore等IO操作执行shell等其他命令存在卡顿，写入磁盘策略从强制将数据刷到磁盘改为
+> 3. 本地调整至调整TiKV ，其他不需要调整。 
+> 4. 配置模板 https://github.com/pingcap/docs-cn/tree/master/config-templates
 
+
+
+
+
+
+
+- 参数含义
+
+~~~shell
+server_configs:
+  tikv:
+    server.grpc-concurrency: 2
+    raftstore.sync-log:false
+    # raftstore.apply-pool-size: 2
+    # raftstore.store-pool-size: 2
+    # rocksdb.max-sub-compactions: 1
+    # storage.block-cache.capacity: "16GB"
+    # readpool.unified.max-thread-count: 12
+    readpool.storage.use-unified-pool: false
+    readpool.coprocessor.use-unified-pool: true
+
+https://asktug.com/t/topic/33426
+sync-log 默认为 true，表示强制将数据刷到磁盘上；
+通过使用 Raft 一致性算法，数据在各 TiKV 节点间复制为多副本，以确保某个节点挂掉时数据的安全性。
+只有当数据已写入超过 50% 的副本时，应用才返回 ACK（三副本中的两副本）。但理论上两个节点也可能同时发生故障，所以除非是对性能要求高于数据安全的场景，一般都强烈推荐开启 sync-log。一般来说，开启 sync-log 会让性能损耗 30% 左右。
+~~~
 
 
 
@@ -367,7 +522,9 @@ https://asktug.com/_/tidb-performance-map/#/tikv
 
 ### 遗留TODO
 
-- TiKV面板以前没使用过，里面好多功能，需要你研究一下。
+- TiKV面板以前没使用过，里面好多功能参数，需要你研究一下。和源码结合起来
+- 8.2.1 TiKV 线程池优化
+- [TiKV 内存参数性能调优](https://docs.pingcap.com/zh/tidb/dev/tune-tikv-memory-performance)
 
 
 
@@ -384,5 +541,11 @@ https://asktug.com/_/tidb-performance-map/#/tikv
 - [如何对 TiDB 进行 TPC-C 测试](https://docs.pingcap.com/zh/tidb/v3.0/benchmark-tidb-using-tpcc)
 
 - [TiKV 性能参数调优](https://docs.pingcap.com/zh/tidb/v3.0/tune-tikv-performance)
+
+- [TiUP 常见运维操作](https://docs.pingcap.com/zh/tidb/stable/maintain-tidb-using-tiup)
+
+- 如何读懂火焰图？
+
+  
 
   
