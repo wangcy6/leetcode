@@ -53,6 +53,12 @@
 
 
 
+#### 调优之后
+
+> 在1个线程情况下压测，增加tikv 配置性能和并发 更好。
+>
+> 客户端有64个并发请求，还是线程切换问题，性能下降。TiDB 集群扩容优势没体现出来。
+
 
 
 ### 机器配置
@@ -62,7 +68,7 @@
 | Ubuntu | 18.04          | 虚拟机1个 |
 | cpu    | Virtual CPU  3 |           |
 | 内存   | 2G             |           |
-|        |                |           |
+| 磁盘   | sad            |           |
 
 
 
@@ -614,7 +620,7 @@ sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --t
 | point_select |        |         |         |             |             |              |             |
 | point_select |        |         |         |             |             |              |             |
 
-- 2. 4测试报告 
+#### 测试报告 
 
 > 增加一个负载，反而qps下降了，还是线程切换问题。客户端还有64个并发请求
 >
