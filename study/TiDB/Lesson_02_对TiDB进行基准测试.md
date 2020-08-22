@@ -22,8 +22,34 @@
 	    * TiKV Details 面板中 grpc 的 qps 以及 duration
 
 输出：写出你对该配置与拓扑环境和 workload 下 TiDB 集群负载的分析，
-提出你认为的 TiDB 的性能的瓶颈所在(能提出大致在哪个模块即 可
+提出你认为的 TiDB 的性能的瓶颈所在(能提出大致在哪个模块即可)
 ~~~
+
+
+
+### 输出：
+
+ TiDB 我普通机器上可能存在瓶颈（机器配置低更能体现问题）
+
+1. 通过增加线程数，TiDB 并发能力增加，因为上下去切换造成平均延迟增加。golang socket读写大量阻塞并没有消耗过多cpu executor  
+2. Tikv在处理事务时候 持久化消耗IO，和锁 涉及模块 raftstore，Scheduler
+
+  
+
+调优如下：
+
+
+
+1. Tikv 通过观察gRPC 一直停留send中，存在IO阻塞，对cpu消耗不是很大。
+
+   本机内核默认3核，什么做请看下存在2k-9k上下去切换，存在大量cpu io wa ，线程个数server.grpc-concurrency 为2，
+
+2.  Tikv raftstore等IO操作执行shell等其他命令存在卡顿，写入磁盘策略从强制将数据刷到磁盘改为no
+3. TiDB 集群扩缩容:增加一个负载，处理大量客户端请求。 
+
+> 因为压测工具在本机执行，在压测启动1个线程请看下，延迟和qps 明显提高。
+>
+> 在压测启动64线程情况下，效果不行，还是上下切换问题。
 
 
 
@@ -463,6 +489,15 @@ Error: failed to start tikv:    tikv 127.0.0.1:20160 failed to start: timed out 
 
 Verbose debug logs has been written to /root/logs/tiup-cluster-debug-2020-08-22-15-29-57.log.
 
+
+
+tiup cluster edit-config  tidb-test
+tiup cluster reload  tidb-test
+
+ 执行扩容命令
+
+tiup cluster scale-out tidb-test scale-out.yaml
+ ssh-keygen //设置 SSH 通过密钥登录
 ```
 
 
@@ -486,27 +521,23 @@ https://asktug.com/_/tidb-performance-map/#/tikv
 >    本机内核默认3核，什么做请看下存在2k-9k上下去切换，存在大量cpu io wa ，线程个数server.grpc-concurrency 为2，
 >
 > 2. raftstore等IO操作执行shell等其他命令存在卡顿，写入磁盘策略从强制将数据刷到磁盘改为
-> 3. 本地调整至调整TiKV ，其他不需要调整。 
+> 3. TiDB 集群扩缩容:增加一个负载，处理大量客户端请求。 
 > 4. 配置模板 https://github.com/pingcap/docs-cn/tree/master/config-templates
 
 
 
-
-
-
-
-- 参数含义
+- 2.1 修改TiKV参数  tiup cluster edit-config  tidb-test
 
 ~~~shell
 server_configs:
   tikv:
     server.grpc-concurrency: 2
-    raftstore.sync-log:false
-    # raftstore.apply-pool-size: 2
+    raftstore.sync-log: false
+    raftstore.apply-pool-size: 1
     # raftstore.store-pool-size: 2
     # rocksdb.max-sub-compactions: 1
     # storage.block-cache.capacity: "16GB"
-    # readpool.unified.max-thread-count: 12
+    readpool.unified.max-thread-count: 2
     readpool.storage.use-unified-pool: false
     readpool.coprocessor.use-unified-pool: true
 
@@ -518,7 +549,76 @@ sync-log 默认为 true，表示强制将数据刷到磁盘上；
 
 
 
+- 2.2 扩容TiDB 一个节点
 
+~~~shell
+tiup cluster scale-out tidb-test scale-out.yaml
+
+root@money:/data/tidb/tiup# tiup cluster display tidb-test 
+Starting component `cluster`:  display tidb-test
+tidb Cluster: tidb-test
+tidb Version: v4.0.0
+ID               Role        Host       Ports        OS/Arch       Status   Data Dir                                   Deploy Dir
+--               ----        ----       -----        -------       ------   --------                                   ----------
+127.0.0.1:3000   grafana     127.0.0.1  3000         linux/x86_64  Up       -                                          /data/tidb/tiup/tidb-deploy/grafana-3000
+127.0.0.1:2379   pd          127.0.0.1  2379/2380    linux/x86_64  Up|L|UI  /data/tidb/tiup/tidb-data/pd-2379          /data/tidb/tiup/tidb-deploy/pd-2379
+127.0.0.1:9090   prometheus  127.0.0.1  9090         linux/x86_64  Up       /data/tidb/tiup/tidb-data/prometheus-9090  /data/tidb/tiup/tidb-deploy/prometheus-9090
+127.0.0.1:4000   tidb        127.0.0.1  4000/10080   linux/x86_64  Up       -                                          /data/tidb/tiup/tidb-deploy/tidb-4000
+127.0.0.1:4001   tidb        127.0.0.1  4001/10081   linux/x86_64  Up       -                                          /data/tidb/tiup/tidb-deploy/tidb-4001
+127.0.0.1:20170  tikv        127.0.0.1  20170/20180  linux/x86_64  Up       /data/tidb/tiup/tidb-data/tikv-20170       /data/tidb/tiup/tidb-deploy/
+~~~
+
+
+
+- 扩容失败
+
+![image-20200822224152119](../images/image-20200822224152119.png)
+
+
+
+- 2.3 测试数据 
+
+
+
+##### sysbench
+
+sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 prepare
+
+sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 run
+
+![image-20200822231641947](../images/image-20200822231641947.png)
+
+这个是测试方案1的输出
+
+| type         | thread | tps     | qps     | min latency | avg latency | 95th latency | max latency |
+| ------------ | ------ | ------- | ------- | ----------- | ----------- | ------------ | ----------- |
+| point_select | 1      | 1008.1  | 1008.1  | 0.42        | 0.99        | 1.7          | 44.97       |
+| point_select | 3      | 2741.31 | 2741.31 | 0.37        | 1.09        | 2.26         | 39.55       |
+| point_select | 8      | 3225.38 | 3225.38 | 0.37        | 2.48        | 6.91         | 62.25       |
+| point_select | 16     | 3822.22 | 3822.22 | 0.4         | 4.18        | 17.63        | 87.57       |
+| point_select | 32     | 4612.22 | 4612.22 | 0.4         | 6.93        | 17.63        | 87.64       |
+| point_select | 64     | 4455.49 | 4455.49 | 0.48        | 14.35       | 34.95        | 132.55      |
+| point_select | 128    | 5020.49 | 5020.49 | 0.48        | 25.45       | 56.84        | 182.4       |
+| point_select | 256    | 5496.24 | 5496.24 | 0.53        | 46.47       | 99.33        | 306.11      |
+
+这个是测试方案2 对比输出
+
+| type         | thread | tps     | qps     | min latency | avg latency | 95th latency | max latency |
+| ------------ | ------ | ------- | ------- | ----------- | ----------- | ------------ | ----------- |
+| point_select | 1      | 1029.83 | 1029.83 | 0.44        | 0.97        | 1.55         | 33.72       |
+| point_select |        |         |         |             |             |              |             |
+| point_select |        |         |         |             |             |              |             |
+| point_select |        |         |         |             |             |              |             |
+| point_select |        |         |         |             |             |              |             |
+| point_select | 64     | 3944.07 | 3944.07 | 0.48        | 16.20       | 38.94        | 157.13      |
+| point_select |        |         |         |             |             |              |             |
+| point_select |        |         |         |             |             |              |             |
+
+- 2. 4测试报告 
+
+> 增加一个负载，反而qps下降了，还是线程切换问题。客户端还有64个并发请求
+>
+> 在1个线程情况下，增加tikv 配置性能和并发 更好。
 
 ### 遗留TODO
 
@@ -545,6 +645,16 @@ sync-log 默认为 true，表示强制将数据刷到磁盘上；
 - [TiUP 常见运维操作](https://docs.pingcap.com/zh/tidb/stable/maintain-tidb-using-tiup)
 
 - 如何读懂火焰图？
+
+- TiDB 磁盘 I/O 过高的处理办法
+
+- CPU 占用率过高导致读写延迟增加
+
+- [1.3.1 基于 TiUP cluster 的集群扩缩容](https://book.tidb.io/session2/chapter1/tiup-cluster-scale.html)
+
+- https://docs.pingcap.com/zh/tidb/stable/scale-tidb-using-tiup
+
+  
 
   
 
