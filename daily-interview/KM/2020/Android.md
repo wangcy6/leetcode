@@ -137,11 +137,15 @@ https://downloads.gradle-dn.com/distributions/gradle-6.1-bin.zip
 
 
 
-- 选择最新版本：Android Studio 4.1
+- 选择最新版本：Android Studio 4.1（必须是最新的）
 
 ​     https://redirector.gvt1.com/edgedl/android/studio/ide-zips/4.0.1.0/android-studio-ide-193.6626763-windows.zip
 
 - 去掉http代理设置，自动更新
+
+- sdk  Android Studio 4.1 自动下载。
+
+  
 
 
 
@@ -149,9 +153,13 @@ https://downloads.gradle-dn.com/distributions/gradle-6.1-bin.zip
 
 FQA
 
-- https://segmentfault.com/q/1010000012736703
+- Android Studio终端：adb不被识别为内部或外部命令
+
+  > 在Android Studio中，转到`File`▸`Settings...`▸`Tools`▸`Terminal`并将`Start directory`设置为`C:\Users\Example\AppData\Local\Android\Sdk\platform-tools`
 
 
+
+- adb devices 看不到设备
 
 ### adb命令
 

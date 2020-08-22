@@ -216,6 +216,18 @@ s.listener.Accept() -->go s.onConn(clientConn)-->dispatch()--->handleQuery()
 
 ![image](https://user-images.githubusercontent.com/5937331/90312730-6347c800-df39-11ea-9d79-6f361e9ebd8f.png)
 
+cd /data/tidb/src/github.com/pingcap/go-ycsb
+
+./bin/go-ycsb load mysql -P ./workloads/workloada -p recordcount=10000 -p mysql.host=127.0.0.1 -p mysql.port=4000  -p mysql.user=root -p mysql.password=123456 -p mysql.db=test --threads 3
+
+./bin/go-ycsb run mysql -P ./workloads/workloada -p recordcount=10000 -p mysql.host=127.0.0.1 -p mysql.port=4000  -p mysql.user=root -p mysql.password=123456 -p mysql.db=test --threads 3 
+
+./bin/go-ycsb run mysql -P ./workloads/workloadb -p recordcount=10000 -p mysql.host=127.0.0.1 -p mysql.port=4000  -p mysql.user=root -p mysql.password=123456 -p mysql.db=test --threads 3
+
+
+
+
+
 
 
 
