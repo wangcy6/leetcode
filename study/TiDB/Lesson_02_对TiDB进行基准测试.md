@@ -625,6 +625,8 @@ sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --t
 > 增加一个负载，反而qps下降了，还是线程切换问题。客户端还有64个并发请求
 >
 > 在1个线程情况下，增加tikv 配置性能和并发 更好。
+>
+> go-tpc 会造成OOM，暂时不测试了
 
 ### 遗留TODO
 
