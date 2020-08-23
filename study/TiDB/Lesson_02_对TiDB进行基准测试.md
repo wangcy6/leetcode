@@ -226,7 +226,7 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 - 测试命令load &run 
 
-  ~~~
+  ~~~shell
   cd /data/tidb/src/github.com/pingcap/go-ycsb
   
   ./bin/go-ycsb load mysql -P ./workloads/workloada -p recordcount=10000 -p mysql.host=127.0.0.1 -p mysql.port=4000  -p mysql.user=root -p mysql.password=123456 -p mysql.db=test --threads 3
@@ -250,20 +250,14 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 ![image-20200821161648521](https://user-images.githubusercontent.com/5937331/90869904-77714680-e3cb-11ea-96ff-4d7b0ae97b7e.png)
 
 
-
-
-
-
-
 - 小白提问 
 
   1. 什么是workload负载类型  ？就是测试用例
   
-  ~~~
+~~~shell
   root@money:/data/tidb/src/github.com/pingcap/go-ycsb/workloads# ls
   minio  workloada  workloadb  workloadc  workloadd  workloade  workloadf  workload_template
-
-  ~~~
+~~~
   
   ![image-20200820201448205](../images/image-20200820201448205.png)
 
