@@ -1,5 +1,8 @@
 
+### 说明：
 
+ > 本地md文档预览正确，在github出现大量下划线。
+   还没找到那里的语法有问题。
 
 
 ### 题目
@@ -154,7 +157,7 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 
 从profiling_3_3_tikv_127_0_0_1_20160651773159.svg可以看到用到关键模块：
-
+~~~shell
 1. Raftstore：该模块里面我们会介绍 TiKV 如何使用 Raft，如何支持 Multi-Raft
 
 - raftstore::store::worker::read::Lo
@@ -178,11 +181,11 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 5. engine_rocks::snapshot：快照
 
+~~~
 
 
-**Tidb： 部分截图**
 
-
+Tidb： 部分截图
 
 ​
 
