@@ -165,20 +165,15 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 
 
-- tikv::storage::mvcc::reader::point_getter::PointGetter<S>::get::hab989dbb164b935e/tikv::storage::mvcc::reader::point_getter::PointGetter<S>::load_data::h764f9cdaa92b90
-
+- tikv::storage::mvcc::reader::point_getter::Poin
 
 
 3. gRPC
 
-​       -  grpc_call_start_batch/~ExecCtx
-
-
+​       -  grpc_call_start_batch~ExecCtx
 
 4. *RocksDB*： is an embeddable persistent key-value store for fast storage
-
 - _ZN7rocksdb16MemTableIterator4SeekERKNS_5SliceE
-
 
 
 5. engine_rocks::snapshot：快照
@@ -189,9 +184,7 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 
 
-
-
-​	
+​
 
 ![image-20200820193026130.png](https://i.loli.net/2020/08/22/4iVoILuNCyBWaAl.png)
 
