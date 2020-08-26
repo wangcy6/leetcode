@@ -34,7 +34,7 @@
    涉及模块 executor  
 
 2. Tikv在处理事务时候 持久化消耗IO，和锁 
-  涉及模块 raftstore ，Scheduler
+    涉及模块 raftstore ，Scheduler
 
   
 
@@ -218,7 +218,7 @@ Tikv：Flame Graph 停留在sendmsg ，在IO操作
 
 Tidb： 部分截图
 
-​
+
 
 ![image-20200820193026130.png](https://i.loli.net/2020/08/22/4iVoILuNCyBWaAl.png)
 
@@ -285,7 +285,7 @@ Tidb： 部分截图
   root@money:/data/tidb/src/github.com/pingcap/go-ycsb/workloads# ls
   minio  workloada  workloadb  workloadc  workloadd  workloade  workloadf  workload_template
 ~~~
-  
+
   ![image-20200820201448205](../images/image-20200820201448205.png)
 
 2. ops是啥
@@ -601,21 +601,44 @@ sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --t
 | type         | thread | tps     | qps     | min latency | avg latency | 95th latency | max latency |
 | ------------ | ------ | ------- | ------- | ----------- | ----------- | ------------ | ----------- |
 | point_select | 1      | 1029.83 | 1029.83 | 0.44        | 0.97        | 1.55         | 33.72       |
-| point_select |        |         |         |             |             |              |             |
-| point_select |        |         |         |             |             |              |             |
-| point_select |        |         |         |             |             |              |             |
+| point_select | 3      | 2096.87 | 2096.87 | 0.38        | 1.43        | 3.25         | 58.55       |
+| point_select | 8      | 2525.61 | 2525.61 | 0.41        | 3.16        | 9.06         | 65.62       |
+| point_select | 16     | 3042.20 | 3042.20 | 0.45        | 5.25        | 14.73        | 83.56       |
 | point_select |        |         |         |             |             |              |             |
 | point_select | 64     | 3944.07 | 3944.07 | 0.48        | 16.20       | 38.94        | 157.13      |
 | point_select |        |         |         |             |             |              |             |
 | point_select |        |         |         |             |             |              |             |
 
+
+
+- qps虽然增加，但是延迟也随着增加，压测工具应该在其他机器执行。
+
+
+
+### go-tpc and go-ycsb 会造成OOM，暂时不测试了 
+
+> 解决办法 减少准备数据的数量。用上次测试数据对比。测试
+
+
+
+
+
 #### 测试报告 
 
-> 增加一个负载，反而qps下降了，还是线程切换问题。客户端还有64个并发请求
->
-> 在1个线程情况下，增加tikv 配置性能和并发 更好。
->
-> go-tpc 会造成OOM，暂时不测试了
+1. 增加一个负载TIDB，反而qps下降了，还是线程切换问题。客户端还有64个并发请求
+
+2. 在1个线程情况下，增加tikv 配置性能和并发 更好。
+
+
+
+
+
+
+
+
+
+
+
 
 ### 遗留TODO
 

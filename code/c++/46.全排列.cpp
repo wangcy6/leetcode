@@ -25,42 +25,49 @@
 // @lc code=start
 class Solution {
 public:
-  vector<vector<int>> permute(vector<int> &nums) {
-    vector<vector<int>> out;
-    int len = nums.size();
-    if (len == 0) {
-      return out;
-    }
-    vector<bool> used(len, false); // true if nums[i] is used
-    vector<int> pathStack;
-
-    dfs(nums, out, used, pathStack, 0);
-    return out;
-  }
-  // start is the index to path,counts number of used
-  void dfs(vector<int> &nums, vector<vector<int>> &out, vector<bool> &used,
-           vector<int> &pathStack, int start) {
-    if (start == nums.size()) {
-      out.push_back(pathStack);
-      return;
-    }
-    // enumerate possible numbers for current position
-    for (int i = 0; i < nums.size(); i++) {
-      if (used[i] == false) {
-        if (i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false) {
-          continue;
+    vector<vector<int>> permute(vector<int>& nums)
+    {
+        vector<vector<int>> out;
+        int len = nums.size();
+        if (len == 0) {
+            return out;
         }
-        used[i] = true;
-        pathStack.push_back(nums[i]);
-        dfs(nums, out, used, pathStack, start + 1);
-        // restore for used, no need to restore path because it will be
-        /// overwritten in the next iteration
-        // 刚开始接触回溯算法的时候常常会忽略状态重置
-        // 回溯的时候，一定要记得状态重置
-        pathStack.pop_back();
-        used[i] = false;
-      }
+        vector<bool> used(len, false); // true if nums[i] is used
+        vector<int> pathStack;
+
+        dfs(nums, out, used, pathStack, 0);
+        return out;
     }
-  }
+    // start is the index to path,counts number of used
+    void dfs(vector<int>& nums, vector<vector<int>>& out, vector<bool>& used,
+
+        vector<int>& pathStack, int start)
+    {
+        //从叶子结点到根节点形成的一条路径，就是题目要求的一个排列
+        if (start == nums.size()) {
+            out.push_back(pathStack);
+            return;
+        }
+        // n个数的全排列，长度为n
+        // enumerate possible numbers for current position
+        for (int i = 0; i < nums.size(); i++) {
+            if (used[i] == false) {
+                if (i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false) {
+                    continue;
+                }
+                used[i] = true;
+                pathStack.back_push(nums[i]);
+
+                dfs(nums, out, used, pathStack, start + 1);
+                // restore for used, no need to restore path because it will be
+                /// overwritten in the next iteration
+                // 刚开始接触回溯算法的时候常常会忽略状态重置
+                // 回溯的时候，一定要记得状态重置
+
+                pathStack.back_pop();
+                used[i] = false;
+            }
+        }
+    }
 };
 // @lc code=end
