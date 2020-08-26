@@ -29,14 +29,15 @@ func ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	video, err := os.Open(path)
 	if err != nil {
-		log.Info(err)
+		log.Println(err)
 	}
 	defer video.Close()
 
 	http.ServeContent(w, r, "test.mp4", time.Now(), video)
 }
 
-//http://127.0.0.1:6060/watch?path="F:\watch\1.mp4"
+//http://10.112.177.66:6060/mp4?path=/home/gadmin/data/0822/0822.mp4
+//http://127.0.0.1:6060/ts?path=F:\watch\1.mp4
 func main() {
 	//	go func() {
 	//		for {
@@ -44,9 +45,12 @@ func main() {
 	//		}
 	//	}()
 
-	http.HandleFunc("/watch", ServeHTTP)
+	http.HandleFunc("/mp4", ServeHTTP)
 	http.ListenAndServe("0.0.0.0:6060", nil)
 }
 
 //https://segmentfault.com/a/1190000016412013
 //https://golang.org/pkg/net/http/pprof/
+//https://www.teaspect.com/detail/5462?pn=2
+//https://hls-js-dev.netlify.app/demo/
+//https://www.teaspect.com/detail/5462?pn=2
