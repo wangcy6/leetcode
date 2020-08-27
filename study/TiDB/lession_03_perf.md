@@ -24,6 +24,8 @@ perf report -n --stdio
 
 - [Golang 大杀器之性能剖析 PProf](https://segmentfault.com/a/1190000016412013) 阅读耗时
 
+- 性能调优攻略 https://coolshell.cn/articles/7490.html
+
   
 
   
