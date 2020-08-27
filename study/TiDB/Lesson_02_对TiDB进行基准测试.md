@@ -302,7 +302,7 @@ Tidb： 部分截图
 
 1. 普通机器占用大量cpu 和io操作， Grafana上数据已经无法刷新 top 执行缓慢，后面改为sysbench测试。
 
-2. 性能分析火焰显示 耗时比较大，**需要调整线程个数优化**，**磁盘存储方式需要优化**
+2. 性能分析火焰显示 耗时比较大，**需要调整线程个数优化**，**磁盘存储方式需要优化**【模块】
 
    - gRPC 线程池是 TiKV 所有读写请求的总入口，它会把不同任务类型的请求转发给不同的线程池。
 
@@ -312,11 +312,33 @@ Tidb： 部分截图
 
 https://github.com/pingcap-incubator/tidb-in-action/blob/master/session4/chapter8/threadpool-optimize.md
 
+3. tidb-server 申请内存和compare 函数  和内核调度占比比较大。
+
+ 1.56% tidb-server                   [.] runtime.mallocgc 
+
+  1.61% tidb-server                   [.] runtime.scanobject 
+
+7.37%  [kernel]                      [k] finish_task_switch
+
+
+
 
 
 - 测试数据
 
 > warehouses 配置50 直接oom，调整为5
+
+
+
+perf top观看
+
+
+
+![image-20200827181049579](../images/image-20200827181049579.png)
+
+![image-20200827181003053](../images/image-20200827181003053.png)
+
+![image-20200827180029010](../images/image-20200827180029010.png)
 
 ~~~shell
 top：
@@ -412,7 +434,7 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
 ~~~powershell
 git clone https://github.com/pingcap/go-tpc.git
 make build
-
+cd /data/tidb/src/github.com/pingcap/go-tpc
 # Create 10 warehouses by HASH 
 ./bin/go-tpc tpcc -H 127.0.0.1  -P 4000 -U root -p 123456 -D tpcc --warehouses 5   prepare  -T 1 
 
