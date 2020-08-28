@@ -36,7 +36,7 @@
 2. Tikv在处理事务时候 持久化消耗IO，和锁 
     涉及模块 raftstore ，Scheduler
 
-  
+3. *GC*(*Garbage Collection） tidb-server 占比达，只能gcc 版本库这个不确定。
 
 调优如下：
 
