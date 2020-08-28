@@ -56,7 +56,6 @@ $ perf script -i  perf.data | ./stackcollapse-perf.pl --all | ./flamegraph.pl > 
 # 注：如果你在实践过程中现象不明显，可以尝试把10调小，比如调成5甚至1
 yum install hping3
 $ hping3 -S -p 8081 -i u10 127.0.0.1
-    
 
 # -n DEV 表示显示网络收发的报告，间隔1秒输出一组数据
 $ sar -n DEV 1
@@ -72,12 +71,16 @@ $ git clone https://github.com/wg/wrk
 $ cd wrk && make && sudo cp wrk /usr/local/bin/
     
 
+git clone https://github.com/wg/wrk.git  
+cd wrk  
+make 
+    
 # 默认测试时间为10s，请求超时2s
-$ wrk --latency -c 1000 http://192.168.0.30
+$ wrk --latency -c 1000 http://127.0.0.1:8081
+ 
 
-
-# 测试时间30分钟
-$ wrk --latency -c 1000 -d 1800 http://192.168.0.30
+# 测试时间5分钟
+$ wrk --latency -c 1000 -d 300 http://192.168.0.30
 
 Running 10s test @ http://192.168.0.30
   2 threads and 1000 connections
