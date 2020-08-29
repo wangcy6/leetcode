@@ -10,11 +10,58 @@
 
 
 
-### 基本用法
+
+
+
+
+
+
+## 发现问题过程
+
+sysbench：
+
+cd /data/tidb/tiup
+
+- 准备数据：
+
+  sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 prepare
+
+
+
+- 测试结果
+
+  sysbench --config-file=./sysbench-thread-1.cfg oltp_point_select --tables=16 --table-size=10000 run
+
+
+
+perf record   -g -p 30584
+perf report -n --stdio
+
+perf script -i  ./perf.data | /data/tidb/src/github.com/FlameGraph/stackcollapse-perf.pl --all |  /data/tidb/src/github.com/FlameGraph/flamegraph.pl > tidb_16.svg
+
+
+
+/data/tidb/tiup/tidb-deploy/tidb-4000/log
+
+- 了解 系统调用
+
+~~~
+# pstack命令可显示每个进程的栈跟踪
+sudo apt-get install pstack strace
+pstack  16281
+strace -p  16281
+~~~
+
+
+
+### 基础知识补充
 
 
 
 ~~~c++
+http://www.mytidb.com:2379/dashboard/
+
+
 # 安装perf
 yum clean all
 yum makecache
@@ -36,15 +83,14 @@ mpstat -P ALL 3
 # 火焰图
 git clone https://github.com/brendangregg/FlameGraph
 cd FlameGraph    
-perf script -i /root/perf.data | ./stackcollapse-perf.pl --all |  ./flamegraph.pl > ksoftirqd.svg
+perf script -i /root/perf.data | /data/tidb/src/github.com/FlameGraph/stackcollapse-perf.pl --all |  /data/tidb/src/github.com/FlameGraph/flamegraph.pl > ksoftirqd.svg
   
     
 
 # 执行perf记录事件
 # -g：启用进程中函数的调用关系（CPU使用超过0.5%时，才会显示调用栈，可以通过man查看）
 # -a：追踪所有的CPU的
-perf record   -g -p 9011
- 
+perf record   -g -p 30584
 perf report -n --stdio
     
 # 切换到FlameGraph安装路径执行下面的命令生成火焰图
@@ -104,6 +150,40 @@ Transfer/sec:     56.78KB
 
 
 
+### 基础知识补充 pprof 
+
+
+
+
+
+~~~
+
+http://95.169.24.121:10080/debug/pprof/
+
+
+#  TiDB 内存快照分析
+go tool pprof 127.0.0.1:10080/debug/pprof/heap
+curl -G 127.0.0.1:10080/debug/pprof/heap > heap.profile
+
+go tool pprof heap.profile
+
+
+登录 Dashboard 后，可在左侧功能导航处点击「高级调试 → 节点性能分析」进入性能分析页面。
+
+选择一个或多个需要进行性能分析的节点，并选择性能分析时长(默认为 30 秒，最多 120 秒)，点击「开始分析」，即可开始性能分析。
+ 
+# pstack命令可显示每个进程的栈跟踪
+sudo apt-get install pstack strace
+pstack  16281
+strace -p  16281
+~~~
+
+
+
+
+
+
+
 ## ref
 
 - https://time.geekbang.org/column/article/87342
@@ -113,6 +193,8 @@ Transfer/sec:     56.78KB
 - [Golang 大杀器之性能剖析 PProf](https://segmentfault.com/a/1190000016412013) 阅读耗时
 
 - 性能调优攻略 https://coolshell.cn/articles/7490.html
+
+- Golang 大杀器之跟踪剖析 trace  阅读 40分钟 [Golang 大杀器之跟踪剖析 trace](https://juejin.im/post/6844903887757901831)
 
   
 
