@@ -1,3 +1,165 @@
+| 拓扑结构 | 个数 | 关键参数 |
+| -------- | ---- | -------- |
+| Tidb     | 1    |          |
+| pd       | 1    | 同一个   |
+| TiKV     | 1    | 同一个   |
+
+| 软件   | 版本           | 备注      |
+| ------ | -------------- | --------- |
+| Ubuntu | 18.04          | 虚拟机1个 |
+| cpu    | Virtual CPU  3 |           |
+| 内存   | 2G             |           |
+| 磁盘   | 普通           |           |
+
+## 一、测试结果分析
+
+根据 对<测试数据分析> 
+
+- Tidb_server **36.18%**时间在writeResultset , 程序停留在不是SQL执行过程，而是SQL发送到客户端过程中
+
+  > 本次压测范围是查询，**Select 语句需要返回结果集** ，
+  >
+  > 更加复杂sql和*DDL*  insert updte 与TIKV有关 ，后续需要学习。没重点测试，主要测试
+
+  tcp传输 不跨机器传输一般20ms完成，这里消耗40ms。
+
+  **这说明发送数据到客户端可能存在瓶颈问题** 【具体过程需要看代码解决】
+
+  ```go
+  	857:		err = cc.writeResultset(goCtx, rs[0], false, false)  
+  	// SQL 核心层 拿到 SQL 语句的结果后会调用 writeResultset 方法把结果写回客户端
+  ```
+  
+
+  具体来说 :跟系统的内核SKB ,tidb-server executor执行批量writeChunks有关系。  bufio.(*Writer).Flush 
+
+  [kernel.kallsyms]  [k] sock_sendmsg  
+
+  ---->tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).writeChunks
+
+  --->[kernel.kallsyms]  [k] tcp_transmit_skb 
+
+  --->[kernel.kallsyms]  [k] __netif_receive_skb_cor
+
+  
+
+
+
+![image-20200831114357028](../images/image-20200831114357028.png)
+
+tcp_transmit_skb 
+
+
+
+查询 http://www.brendangregg.com/perf.html 搜索关键字tcp_transmit_skb 【后面继续了解】
+
+![img](https://mmbiz.qpic.cn/mmbiz_png/Z6bicxIx5naLWBBEcl44aIic1Mthe1nZiarTF9UDhhpZkwKQ592e6g7mJymGxsNoc2gN7tgJlEnXoGUoibzzNDLaEQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+![img](https://mmbiz.qpic.cn/mmbiz_png/Z6bicxIx5naLWBBEcl44aIic1Mthe1nZiariaATuqvXSHmtEYITNAic8Szkr02T0kSSYzJ3VJlgZByjWD5ovz0PyhKQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+
+
+- 通过耗时分析 主要停留在系统调用读写 和gprc  session读写上
+
+  
+
+  gprc  session：查询需要分配内存 和批量buffer等
+
+  系统调用：read send接口（跟我虚拟机有关系tcp_transmit_skb）
+
+  
+
+  ![image-20200831123130560](../images/image-20200831123130560.png)
+
+搜索历史bug
+
+https://github.com/pingcap/tidb/issues/17749
+
+https://asktug.com/t/topic/1333
+
+
+
+## 二、具体代码分析
+
+
+
+![SQL 层架构](https://download.pingcap.com/images/blog-cn/tidb-source-code-reading-2/2.png)
+
+- 重点关注从执行引擎到返回客户端这一段、**跟网络发送有关系**。
+
+  
+
+![SQL 层执行过程](https://download.pingcap.com/images/blog-cn/tidb-source-code-reading-3/2.png)
+
+- TiDB 的执行引擎，**跟磁盘有读写有关系**
+
+
+
+![执行器树](https://download.pingcap.com/images/blog-cn/tidb-source-code-reading-3/1.png)
+
+[TiDB 源码阅读系列文章（六）Select 语句概览](https://pingcap.com/blog-cn/tidb-source-code-reading-6/)
+
+
+
+相比 Insert 的处理流程，Select 的处理流程中有 3 个明显的不同：
+
+1. 需要经过 Optimize
+
+   Insert 是比较简单语句，在查询计划这块并不能做什么事情（对于 Insert into Select 语句这种，实际上只对 Select 进行优化），而 Select 语句可能会无比复杂，不同的查询计划之间性能天差地别，需要非常仔细的进行优化。
+
+   ```go
+   logicalOptimize //逻辑优化
+   dagPhysicalOptimize //物理优化
+   
+   mysql> explain select * from teacher where age >=18; //explain 执行结果和sql不太一样。
+   +-------------------------+----------+-----------+---------------+--------------------------------+
+   | id                      | estRows  | task      | access object | operator info                  |
+   +-------------------------+----------+-----------+---------------+--------------------------------+
+   | TableReader_7           | 3333.33  | root      |               | data:Selection_6               |
+   | └─Selection_6           | 3333.33  | cop[tikv] |               | ge(test.teacher.age, 18)       |
+   |   └─TableFullScan_5     | 10000.00 | cop[tikv] | table:teacher | keep order:false, stats:pseudo |
+   +-------------------------+----------+-----------+---------------+--------------------------------+
+   ```
+
+2. 需要和存储引擎中的计算模块交互
+
+   Insert 语句只涉及对 Key-Value 的 Set 操作，Select 语句可能要查询大量的数据，
+
+   
+
+   如果通过 KV 接口操作存储引擎，会过于低效，必须要通过计算下推的方式，将计算逻辑发送到存储节点，就近进行处理。
+
+   
+
+3. 需要对客户端返回结果集数据
+
+   Insert 语句只需要返回是否成功以及插入了多少行即可，**而 Select 语句需要返回结果集**。【here】
+
+
+
+- 边读磁盘，边发送网络
+
+合并结果：
+
+在 TiDB 中，计算是以 Region 为单位进行，SQL 层会分析出要处理的数据的 Key Range，再将这些 Key Range 根据 PD 中拿到的 Region 信息划分成若干个 Key Range，最后将这些请求发往对应的 Region。
+
+SQL 层会将多个 Region 返回的结果进行汇总，再经过所需的 Operator 处理，生成最终的结果集。
+
+```go
+// SelectResult is an iterator of coprocessor partial results.
+type SelectResult interface {
+	// NextRaw gets the next raw result.
+	NextRaw(goctx.Context) ([]byte, error)
+	// NextChunk reads the data into chunk.
+	NextChunk(goctx.Context, *chunk.Chunk) error
+	// Close closes the iterator.
+	Close() error
+	// Fetch fetches partial results from client.
+	// The caller should call SetFields() before call Fetch().
+	Fetch(goctx.Context)
+	// ScanKeys gets the total scan row count.
+	ScanKeys() int64
+```
 
 
 
@@ -7,12 +169,64 @@
 
 
 
+## 三、测试数据
 
 
 
+~~~shell
+root@money:/data/tidb/tiup/perf# perf report
+Samples: 226K of event 'cpu-clock', Event count (approx.): 56695250000                                                                                                        
+  Children      Self  Command      Shared Object      Symbol                                                                                                                  
++   87.38%     0.00%  tidb-server  tidb-server        [.] runtime.goexit                                                                                                      
++   57.34%     0.00%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*Server).onConn                                                                     
++   57.18%     0.21%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).Run                                                                    
++   49.83%     0.24%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).dispatch                                                               
++   47.82%     0.17%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).handleStmtExecute                                                      
++   36.18%     0.08%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).writeResultset                                                         
++   31.68%     0.00%  tidb-server  [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe                                                                                      
++   31.46%     1.75%  tidb-server  [kernel.kallsyms]  [k] do_syscall_64                                                                                                       
++   27.39%     0.59%  tidb-server  tidb-server        [.] syscall.Syscall                                                                                                     
++   21.79%     0.08%  tidb-server  tidb-server        [.] net.(*conn).Write                                                                                                   
++   21.71%     0.17%  tidb-server  tidb-server        [.] net.(*netFD).Write                                                                                                  
++   21.33%     0.13%  tidb-server  tidb-server        [.] internal/poll.(*FD).Write                                                                                           
++   18.41%     0.08%  tidb-server  [kernel.kallsyms]  [k] sys_write                                                                                                           
++   17.96%     0.20%  tidb-server  [kernel.kallsyms]  [k] vfs_write                                                                                                           
++   17.19%     0.05%  tidb-server  [kernel.kallsyms]  [k] __vfs_write                                                                                                         
++   17.09%     0.14%  tidb-server  [kernel.kallsyms]  [k] new_sync_write                                                                                                      
++   16.98%     0.08%  tidb-server  [kernel.kallsyms]  [k] sock_write_iter                                                                                                     
++   16.83%     0.10%  tidb-server  [kernel.kallsyms]  [k] sock_sendmsg                                                                                                        
++   16.47%     0.10%  tidb-server  [kernel.kallsyms]  [k] inet_sendmsg                                                                                                        
++   16.33%     0.07%  tidb-server  [kernel.kallsyms]  [k] tcp_sendmsg                                                                                                         
++   15.58%     0.27%  tidb-server  [kernel.kallsyms]  [k] tcp_sendmsg_locked                                                                                                  
++   14.87%     0.10%  tidb-server  tidb-server        [.] bufio.(*Writer).Flush                                                                                               
++   14.80%     0.19%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).writeChunks                                                            
++   14.71%     0.05%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).flush                                                                  
++   14.64%     0.04%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*packetIO).flush                                                                    
++   14.43%     0.08%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*bufferedReadConn).Write                                                            
++   13.19%     0.07%  tidb-server  [kernel.kallsyms]  [k] tcp_push                                                                                                            
++   13.14%     0.05%  tidb-server  [kernel.kallsyms]  [k] __tcp_push_pending_frames                                                                                           
++   12.93%     0.17%  tidb-server  [kernel.kallsyms]  [k] tcp_write_xmit                                                                                                      
++   12.32%     0.29%  tidb-server  [kernel.kallsyms]  [k] tcp_transmit_skb                                                                                                    
++   12.05%     0.09%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/server.(*tidbResultSet).Next                                                                
++   11.84%     0.26%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/executor.(*recordSet).Next                                                                  
++   11.73%     0.00%  tidb-server  tidb-server        [.] google.golang.org/grpc/internal/transport.newHTTP2Client.func3                                                      
++   11.69%     0.11%  tidb-server  [kernel.kallsyms]  [k] ip_queue_xmit                                                                                                       
++   11.47%     0.03%  tidb-server  [kernel.kallsyms]  [k] ip_local_out                                                                                                        
++   11.44%     0.15%  tidb-server  tidb-server        [.] google.golang.org/grpc/internal/transport.(*loopyWriter).run                                                        
++   11.39%     0.05%  tidb-server  [kernel.kallsyms]  [k] ip_output                                                                                                           
++   11.34%     0.13%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/executor.Next                                                                               
++   11.31%     0.11%  tidb-server  [kernel.kallsyms]  [k] ip_finish_output                                                                                                    
++   11.02%     0.23%  tidb-server  [kernel.kallsyms]  [k] ip_finish_output2                                                                                                   
++   10.83%     0.29%  tidb-server  tidb-server        [.] github.com/pingcap/tidb/executor.(*PointGetExecutor).Next
+~~~
 
 
 
+![image-20200831113012463](../images/image-20200831113012463.png)x
+
+- profile/profiling_2_2_tidb_127_0_0_1_4000664362528.svg
+
+![image-20200831122818982](../images/image-20200831122818982.png)
 
 
 
@@ -49,7 +263,11 @@ perf script -i  ./perf.data | /data/tidb/src/github.com/FlameGraph/stackcollapse
 # pstack命令可显示每个进程的栈跟踪
 sudo apt-get install pstack strace
 pstack  16281
+
+
 strace -p  16281
+
+mysql -h 127.0.0.1 -P 4000 -u root  -p 
 ~~~
 
 
@@ -185,6 +403,9 @@ strace -p  16281
 
 
 ## ref
+- TiDB 源码阅读系列文章（六）Select 语句概览
+
+- TiDB 源码阅读系列文章（三）SQL 的一生
 
 - https://time.geekbang.org/column/article/87342
 
