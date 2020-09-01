@@ -33,7 +33,23 @@
 
 
 
+- 源码编译时候，分析tidbserver发现runtime 耗时比较长。TiKV编译时候采用(tcmalloc jemalloc glibc),tidb server好像没有明确。
 
+
+
+~~~
+https://pingcap.com/blog-cn/flame-graph/
+TiKV 是自己内部使用了 jemalloc，并没有用系统的 malloc，所以我们不能直接用 perf 来探查系统的 malloc 函数。幸运的是，perf 能支持动态添加探针，我们将 TiKV 的 malloc 加入：
+
+Copy
+perf probe -x /deploy/bin/tikv-server -a malloc
+然后采样生成火焰图:
+
+perf record -e probe_tikv:malloc -F 99 -p tikv_pid -g -- sleep 10
+perf script > out.perf
+/opt/FlameGraph/stackcollapse-perf.pl out.perf > out.folded
+/opt/FlameGraph/flamegraph.pl  --colors=mem out.folded > mem.svg
+~~~
 
 
 
@@ -49,7 +65,7 @@
   >
   > 更加复杂sql和*DDL
 
-  tcp传输 不跨机器传输一般20ms完成，这里消耗40ms。
+  tcp传输 不跨机器传输一般20ms完成，这里消耗40ms(包括gcc申请内存时间，自己没有采用jemalloc)
 
   **这说明发送数据到客户端可能存在瓶颈问题** 【具体过程需要看代码解决】
 
@@ -254,6 +270,8 @@ type Chunk struct {
 
 ## 三、测试数据
 
+### TIDB
+
 
 
 ~~~shell
@@ -310,6 +328,24 @@ Samples: 226K of event 'cpu-clock', Event count (approx.): 56695250000
 - profile/profiling_2_2_tidb_127_0_0_1_4000664362528.svg
 
 ![image-20200831122818982](../images/image-20200831122818982.png)
+
+- 内存swap
+
+![image-20200831162332520](../images/image-20200831162332520.png)
+
+
+
+![image-20200831162544318](../images/image-20200831162544318.png)
+
+
+
+### tikv  更多数据在perf目录下
+
+
+
+![image-20200831162834918](../images/image-20200831162834918.png)
+
+
 
 
 
