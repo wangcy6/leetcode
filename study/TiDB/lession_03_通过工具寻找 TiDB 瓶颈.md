@@ -1,3 +1,50 @@
+### 题目描述：
+
+1 个有效 issue 100，有效 PR 根据实际效果进行相应加分，比如能节省 CPU、减少内存占用、减少 IO 次数等。
+题目描述：
+
+使用上一节可以讲的 sysbench、go-ycsb 或者 go-tpc 对 TiDB 进行压力测试，然后对 TiDB 或 TiKV 的 CPU 、内存或 IO 进行 profile，寻找潜在可以优化的地方并提 enhance 类型的 issue 描述。
+
+issue 描述应包含：
+* 部署环境的机器配置（CPU、内存、磁盘规格型号），拓扑结构（TiDB、TiKV 各部署于哪些节点）
+* 跑的 workload 情况
+* 对应的 profile 看到的情况
+* 建议如何优化？
+* 【可选】提 PR 进行优化：按照 PR 模板提交优化 PR
+
+输出：对 TiDB 或 TiKV 进行 profile，写文章描述分析的过程，对于可以优化的地方提 issue 描述，并将 issue 贴到文章中（或【可选】提 PR 进行优化，将 PR 贴到文章中）
+
+
+
+### 作业输出
+
+https://github.com/pingcap/tidb/issues/19626
+
+
+
+~~~~
+I am using TiDB 4.04  ,Ubuntu 18.04，Virtual CPU 3  ，2G ,Tidb  pd TiKV  1:1:1
+
+I'm using sysbench(oltp_point_select  , 16 tables, 66666 rows) to test the performance of TiDB today.
+
+I find that Writing query results back to the client （writeResultset）is  slow
+（TCP default local transmission about 20-40ms ）
+
+How to improve concurrency without improving the machine configuration？
+
+Need to optimize by yourself, for example, modify tcp parameters。
+
+As described below ，May be  Three possible reasons
+
+[kernel.kallsyms]  tcp_transmit_skb , The Tcp Layer is default.
+github.com/pingcap/tidb/server.(*clientConn).writeChunks or ,Tidb server not pointer to jemalloc when make
+grpc http
+~~~~
+
+
+
+
+
 | 拓扑结构 | 个数 | 关键参数 |
 | -------- | ---- | -------- |
 | Tidb     | 1    |          |
@@ -10,6 +57,14 @@
 | cpu    | Virtual CPU  3 |           |
 | 内存   | 2G             |           |
 | 磁盘   | 普通           |           |
+
+
+
+
+
+
+
+
 
 
 
