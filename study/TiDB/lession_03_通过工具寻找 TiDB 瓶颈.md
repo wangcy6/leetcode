@@ -17,7 +17,11 @@ issue 描述应包含：
 
 https://github.com/pingcap/tidb/issues/19626
 
-在不提高单核 cpu 的能力，或增加 tikv数量请下，如果提高Tidb能力
+在不提高单核 cpu 的能力，或增加 tikv数量请下，如果提高Tidb能力？
+
+> 查询数据，返回给客户端 满 跟 内核滑动窗口 和Chunks有关
+>
+> 具体优化不一定正确，在<目前看出可以优化地方>
 
 ![image-20200902101048819](../images/image-20200902101048819.png)
 
@@ -25,11 +29,11 @@ https://github.com/pingcap/tidb/issues/19626
 
 
 
-| 拓扑结构 | 个数 | 关键参数 |
-| -------- | ---- | -------- |
-| Tidb     | 1    |          |
-| pd       | 1    | 同一个   |
-| TiKV     | 1    | 同一个   |
+| 拓扑结构 | 个数 | 关键参数              |
+| -------- | ---- | --------------------- |
+| Tidb     | 1    | 同一个主机 ，最低参数 |
+| pd       | 1    | 同一个主机，最低参数  |
+| TiKV     | 1    | 同一个主机，最低参数  |
 
 | 软件   | 版本           | 备注      |
 | ------ | -------------- | --------- |
@@ -42,7 +46,7 @@ https://github.com/pingcap/tidb/issues/19626
 
 
 
-目前看出可以优化地方：
+### 目前看出可以优化地方：
 
 
 
@@ -78,7 +82,7 @@ perf script > out.perf
 
 
 
-- 其他地方，正在看代码中
+-  gprc 关于 future 切换 和系统调用方面 正在看，具体在代码分析上。
 
 
 
@@ -168,6 +172,8 @@ https://asktug.com/t/topic/1333
 
 
 ## 二、具体代码分析
+
+> 具体函数执行结合profie和strace  gdb 进行单步跟踪。
 
 
 
@@ -304,6 +310,73 @@ type Chunk struct {
 	// It is used only when this Chunk doesn't hold any data, i.e. "len(columns)==0".
 	numVirtualRows int
 }
+~~~
+
+
+
+### 正在看这个函数的实现 writeChunks注释版本
+
+
+
+~~~go
+// writeChunks writes data from a Chunk, which filled data by a ResultSet, into a connection.
+// binary specifies the way to dump data. It throws any error while dumping data.
+// serverStatus, a flag bit represents server information
+func (cc *clientConn) writeChunks(ctx context.Context, rs ResultSet, binary bool, serverStatus uint16) error {
+	data := cc.alloc.AllocWithLen(4, 1024)
+	req := rs.NewChunk()
+	gotColumnInfo := false
+	var stmtDetail *execdetails.StmtExecDetails
+	stmtDetailRaw := ctx.Value(execdetails.StmtExecDetailKey)
+	if stmtDetailRaw != nil {
+		stmtDetail = stmtDetailRaw.(*execdetails.StmtExecDetails)
+	}
+
+	for {
+		// Here server.tidbResultSet implements Next method.
+        //类似mysql一样 ，一行一行获取记录
+		err := rs.Next(ctx, req)
+		if err != nil {
+			return err
+		}
+		if !gotColumnInfo {
+			// We need to call Next before we get columns.
+			// Otherwise, we will get incorrect columns info.
+			columns := rs.Columns()
+			err = cc.writeColumnInfo(columns, serverStatus)
+			if err != nil {
+				return err
+			}
+			gotColumnInfo = true
+		}
+		rowCount := req.NumRows()
+		if rowCount == 0 {
+			break
+		}
+		start := time.Now()
+        //这是一行一行发送的？？？？
+		for i := 0; i < rowCount; i++ {
+			data = data[0:4]
+			if binary {
+				data, err = dumpBinaryRow(data, rs.Columns(), req.GetRow(i))
+			} else {
+				data, err = dumpTextRow(data, rs.Columns(), req.GetRow(i))
+			}
+			if err != nil {
+				return err
+			}
+            //发送网络包
+			if err = cc.writePacket(data); err != nil {
+				return err
+			}
+		}
+		if stmtDetail != nil {
+			stmtDetail.WriteSQLRespDuration += time.Since(start)
+		}
+	}
+	return cc.writeEOF(serverStatus)
+}
+
 ~~~
 
 
