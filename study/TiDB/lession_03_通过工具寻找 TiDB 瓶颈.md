@@ -1,7 +1,6 @@
 ### 题目描述：
 
-1 个有效 issue 100，有效 PR 根据实际效果进行相应加分，比如能节省 CPU、减少内存占用、减少 IO 次数等。
-题目描述：
+
 
 使用上一节可以讲的 sysbench、go-ycsb 或者 go-tpc 对 TiDB 进行压力测试，然后对 TiDB 或 TiKV 的 CPU 、内存或 IO 进行 profile，寻找潜在可以优化的地方并提 enhance 类型的 issue 描述。
 
@@ -12,34 +11,15 @@ issue 描述应包含：
 * 建议如何优化？
 * 【可选】提 PR 进行优化：按照 PR 模板提交优化 PR
 
-输出：对 TiDB 或 TiKV 进行 profile，写文章描述分析的过程，对于可以优化的地方提 issue 描述，并将 issue 贴到文章中（或【可选】提 PR 进行优化，将 PR 贴到文章中）
-
 
 
 ### 作业输出
 
 https://github.com/pingcap/tidb/issues/19626
 
+在不提高单核 cpu 的能力，或增加 tikv数量请下，如果提高Tidb能力
 
-
-~~~~
-I am using TiDB 4.04  ,Ubuntu 18.04，Virtual CPU 3  ，2G ,Tidb  pd TiKV  1:1:1
-
-I'm using sysbench(oltp_point_select  , 16 tables, 66666 rows) to test the performance of TiDB today.
-
-I find that Writing query results back to the client （writeResultset）is  slow
-（TCP default local transmission about 20-40ms ）
-
-How to improve concurrency without improving the machine configuration？
-
-Need to optimize by yourself, for example, modify tcp parameters。
-
-As described below ，May be  Three possible reasons
-
-[kernel.kallsyms]  tcp_transmit_skb , The Tcp Layer is default.
-github.com/pingcap/tidb/server.(*clientConn).writeChunks or ,Tidb server not pointer to jemalloc when make
-grpc http
-~~~~
+![image-20200902101048819](../images/image-20200902101048819.png)
 
 
 
@@ -62,17 +42,7 @@ grpc http
 
 
 
-
-
-
-
-
-
-
-
 目前看出可以优化地方：
-
-
 
 
 
@@ -108,6 +78,8 @@ perf script > out.perf
 
 
 
+- 其他地方，正在看代码中
+
 
 
 ## 一、测试结果分析
@@ -116,30 +88,45 @@ perf script > out.perf
 
 - Tidb_server **36.18%**时间在writeResultset , 程序停留在不是SQL执行过程，而是SQL发送到客户端过程中
 
-  > 本次压测范围是查询，**Select 语句需要返回结果集** ，
+  > 本次压测范围是查询，**Select 语句需要返回结果集** 考验的是TidbServer 
   >
-  > 更加复杂sql和*DDL
-
-  tcp传输 不跨机器传输一般20ms完成，这里消耗40ms(包括gcc申请内存时间，自己没有采用jemalloc)
-
-  **这说明发送数据到客户端可能存在瓶颈问题** 【具体过程需要看代码解决】
-
-  ```go
+  > （insert 考验的是tikvServer 和磁盘 TiKV raftstore）。
+>
+  > 运行 sysbench oltp 测试， sysbench 默认 oltp 一个事务包含 18 条 SQL:
+>
+  > ```
+> 10 * point select
+  > 1 * simple range select
+  > 1 * sum range
+  > 1 * order range
+  > 1 * distinct range
+  > 1 * index update
+> 1 * non index update
+  > 1 * insert
+> 1 * deletetcp
+  > 
+> 
+  > 传输 不跨机器传输一般20ms完成，这里消耗40ms(包括gcc申请内存时间，自己没有采用jemalloc)
+> ```
+  
+**这说明发送数据到客户端可能存在瓶颈问题** 【具体过程需要看代码解决】
+  
+```go
   	857:		err = cc.writeResultset(goCtx, rs[0], false, false)  
   	// SQL 核心层 拿到 SQL 语句的结果后会调用 writeResultset 方法把结果写回客户端
   ```
   
-
+  
   具体来说 :跟系统的内核SKB ,tidb-server executor执行批量writeChunks有关系。  bufio.(*Writer).Flush 
-
+  
   [kernel.kallsyms]  [k] sock_sendmsg  
-
+  
   ---->tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).writeChunks
-
+  
   --->[kernel.kallsyms]  [k] tcp_transmit_skb 
-
+  
   --->[kernel.kallsyms]  [k] __netif_receive_skb_cor
-
+  
   
 
 
@@ -158,7 +145,9 @@ tcp_transmit_skb
 
 
 
-- 通过耗时分析 主要停留在系统调用读写 和gprc  session读写上
+- 通过耗时分析 主要停留在系统调用读写 
+
+- gprc   future task 导致的频繁线程切换 
 
   
 
