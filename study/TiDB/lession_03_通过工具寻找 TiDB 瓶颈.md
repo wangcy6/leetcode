@@ -17,11 +17,29 @@ issue 描述应包含：
 
 https://github.com/pingcap/tidb/issues/19626
 
-在不提高单核 cpu 的能力，或增加 tikv数量请下，如果提高Tidb能力？
+问：在不提高单核 cpu 的能力，或增加 tikv数量情况下，如果提高Tidb能力？
 
-> 查询数据，返回给客户端 满 跟 内核滑动窗口 和Chunks有关
+writeResultset 函数瓶颈点：
+
+TiDB 在内部处理数据是一批一批的，到了发送结果给客户端时，是一行一行的。
+
+ 需要把一个 chunk 的数据按行转换成 MySQL 的编码格式了发送出去。 
+
+
+
+优化点：tpc内核传输，利用好滑动窗口，因为出现了tcp_transmit_skb  大量提示
+
+
+
+> 查询数据，虽然tidb Chunks (TiDB 在内部处理数据是一批一批)
 >
-> 具体优化不一定正确，在<目前看出可以优化地方>
+> 但是 返回给客户端 是一行一行发送的( 需要把一个 chunk 的数据按行转换成 MySQL 的编码格式了发送出去)
+>
+> 优化的：tpc内核传输，利用好滑动窗口，因为出现了tcp_transmit_skb  大量提示。
+>
+> https://dev.mysql.com/doc/internals/en/com-query-response.html
+>
+> 
 
 ![image-20200902101048819](../images/image-20200902101048819.png)
 
@@ -83,6 +101,14 @@ perf script > out.perf
 
 
 -  gprc 关于 future 切换 和系统调用方面 正在看，具体在代码分析上。
+
+
+
+>TiDB 在内部处理数据是一批一批的，到了发送结果给客户端时，是一行一行的。
+
+> 需要把一个 chunk 的数据按行转换成 MySQL 的编码格式了发送出去。 
+
+> MySQL 的消息包的编码格式可以在这里找到 https://dev.mysql.com/doc/internals/en/com-query-response.html
 
 
 
@@ -382,6 +408,16 @@ func (cc *clientConn) writeChunks(ctx context.Context, rs ResultSet, binary bool
 
 
 
+
+### Mysql协议
+
+
+
+https://dev.mysql.com/doc/internals/en/com-query-response.html
+
+https://asktug.com/t/topic/36939
+
+![Image description follows.](https://dev.mysql.com/doc/internals/en/images/graphviz-3ab2ba81081a7f3cc556d11fd09f50341bba6f15.png)
 
 
 
