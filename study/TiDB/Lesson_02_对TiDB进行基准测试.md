@@ -489,15 +489,12 @@ Usage:
 
 ```bash
 tiup cluster deploy tidb-test v4.0.0 ./topology1.yaml --user root -p ##部署
-tiup cluster start tidb-test ##别忘记启动呀！！！
-
-tiup cluster display tidb-test  ##查询
 tiup cluster list ##查询
-tiup cluster start tidb-test
-
+tiup cluster display tidb-test  ##查询
+tiup cluster start tidb-test ##启动
 tiup cluster start tidb-test  -R pd ## 单独启动
- 
 tiup cluster stop tidb-test
+
 tiup cluster destroy tidb-test
 retry error: operation timed out after 2m0s
         tikv 127.0.0.1:20160 failed to start: timed out waiting for port 20160 to be started after 2m0s, please check the log of the instance
@@ -513,7 +510,7 @@ tiup cluster reload  tidb-test
 
  执行扩容命令
 
-tiup cluster scale-out tidb-test scale-out.yaml
+ tiup cluster scale-out tidb-test scale-out.yaml
  ssh-keygen //设置 SSH 通过密钥登录
 ```
 

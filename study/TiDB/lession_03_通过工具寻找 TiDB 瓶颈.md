@@ -138,25 +138,25 @@ perf script > out.perf
 > 
   > 传输 不跨机器传输一般20ms完成，这里消耗40ms(包括gcc申请内存时间，自己没有采用jemalloc)
 > ```
-  
+
 **这说明发送数据到客户端可能存在瓶颈问题** 【具体过程需要看代码解决】
-  
+
 ```go
   	857:		err = cc.writeResultset(goCtx, rs[0], false, false)  
   	// SQL 核心层 拿到 SQL 语句的结果后会调用 writeResultset 方法把结果写回客户端
-  ```
-  
-  
+```
+
+
   具体来说 :跟系统的内核SKB ,tidb-server executor执行批量writeChunks有关系。  bufio.(*Writer).Flush 
-  
+
   [kernel.kallsyms]  [k] sock_sendmsg  
-  
+
   ---->tidb-server        [.] github.com/pingcap/tidb/server.(*clientConn).writeChunks
-  
+
   --->[kernel.kallsyms]  [k] tcp_transmit_skb 
-  
+
   --->[kernel.kallsyms]  [k] __netif_receive_skb_cor
-  
+
   
 
 
@@ -204,6 +204,16 @@ https://asktug.com/t/topic/1333
 
 
 ![SQL 层架构](https://download.pingcap.com/images/blog-cn/tidb-source-code-reading-2/2.png)
+
+- volcano
+
+![image-20200904093454318](../images/image-20200904093454318.png)
+
+iDB 的向量化计算是在经典 Volcano 模型上的进行改进，尽可能利用 CPU Cache，SIMD Instructions，Pipeline，Branch Predicatation 等硬件特性提升计算性能，同时降低执行框架的迭代开销
+
+https://pingcap.com/blog-cn/10mins-become-contributor-of-tidb-20190916/
+
+
 
 - 重点关注从执行引擎到返回客户端这一段、**跟网络发送有关系**。
 
