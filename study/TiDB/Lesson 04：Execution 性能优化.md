@@ -49,7 +49,7 @@ help-wanted issues of expressions
 * 相关 issue 链接可从 PPT 直接获取
 
 
-
+https://github.com/pingcap/tidb/issues/18693
 
 
 
