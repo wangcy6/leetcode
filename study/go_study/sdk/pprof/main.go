@@ -36,8 +36,8 @@ func ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.ServeContent(w, r, "test.mp4", time.Now(), video)
 }
 
-//http://10.112.177.66:6060/mp4?path=/home/gadmin/data/0822/0822.mp4
-//http://127.0.0.1:6060/ts?path=F:\watch\1.mp4
+//http://10.112.177.65:6060/mp4?path=/home/gadmin/record/0906/guomei202009.mp4
+//http://10.112.177.65:6060/mp4?path=/home/gadmin/record/0906/guomei202009.ts
 func main() {
 	//	go func() {
 	//		for {
