@@ -54,6 +54,10 @@ https://github.com/pingcap/tidb/issues/18693
 
 
 
+### 理解 TiDB 执行计划
+
+explain select * from t use index(idx_a) where a = 1;
+
 ## FQA
 - https://asktug.com/t/topic/36992
 
@@ -61,6 +65,7 @@ https://github.com/pingcap/tidb/issues/18693
 
 
 # 参考
+- 理解 TiDB 执行计划 https://docs.pingcap.com/zh/tidb/dev/query-execution-plan
 - 揭秘 TiDB 新优化器： Cascades Planner 原理解析
 - TiDB 源码阅读系列文章（六）Select 语句概览
 - ​	[Go夜读 第 47 期 TiDB 源码阅读之 Executor](https://www.bilibili.com/video/av55403428/) --OK 40分钟
