@@ -51,12 +51,24 @@ help-wanted issues of expressions
 
 https://github.com/pingcap/tidb/issues/18693
 
-
+https://github.com/pingcap/tidb/issues/18693
 
 
 ### 理解 TiDB 执行计划
 
 explain select * from t use index(idx_a) where a = 1;
+explain select * from t t1 use index(idx_a) join t t2 use index() where t1.a = t2.a;
+
+如何阅读 Join 的执行计划
+
+Hash Join
+Merge Join
+EXPLAIN SELECT /*+ MERGE_JOIN(t1, t2) */ * FROM t1, t2 WHERE t1.id = t2.id;
+Index Join (Index Nested Loop Join)
+Index Hash Join (Index Nested Loop Hash Join)
+Index Merge Join (Index Nested Loop Merge Join)
+https://www.bookstack.cn/read/TiDB-4.0/query-execution-plan.md
+
 
 ## FQA
 - https://asktug.com/t/topic/36992
