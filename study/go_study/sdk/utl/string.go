@@ -2,26 +2,18 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"unicode/utf8"
 )
 
 func main() {
-	var name = ``
+	var name = "q``q"
 	var name1 = `index_     `
-	var name2 = ""
-	namename, err := strconv.Atoi(name)
-	if err != nil {
-		fmt.Printf("%v 转换失败！", namename)
+	var name2 = "q''q"
+	if name == name2 {
+		fmt.Println("===============")
 	} else {
-		fmt.Printf("1111type:%T value:%#v\n", namename, namename)
-	}
-	name2name2, err := strconv.Atoi(name2)
-	if err != nil {
-		fmt.Printf("%v 转换失败！", name2name2)
-	} else {
-		fmt.Printf("2222 type:%T value:%#v\n", name2name2, name2name2)
+		fmt.Println("not euql ")
 	}
 
 	if len(name) == 0 && name == `` {
