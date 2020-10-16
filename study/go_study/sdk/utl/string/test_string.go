@@ -3,10 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	//var name string = nil
-	//fmt.Println(name)
-	var data interface{}
-	data = nil
+
+	data := []interface{nil, 0}
 
 	if str, ok := data.(string); ok {
 		/* act on str */
