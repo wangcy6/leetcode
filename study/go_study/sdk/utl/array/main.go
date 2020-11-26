@@ -8,7 +8,7 @@ func printSlice(x []int) {
 	fmt.Printf("len=%d cap=%d slice=%v\n", len(x), cap(x), x)
 }
 func main() {
-
+	/**
 	array := make([]int, 100)
 	for i := 0; i < 100; i++ {
 		array[i] = i
@@ -22,6 +22,10 @@ func main() {
 			cursor += left
 		}
 
+	}**/
+	arr := []int{1, 2, 3}
+	for i, _ := range arr {
+		fmt.Println(i)
 	}
 }
 
