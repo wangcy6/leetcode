@@ -68,7 +68,7 @@ public:
     int maxArea(vector<int>& height)
     {
         int left = 0;
-        int right = height.size() - 1;
+        int right = height.size() - 1; //下标必须-1操作
         int area = 0;
         while (left < right) {
             if (height[left] < height[right]) {
@@ -76,11 +76,11 @@ public:
                 left++;
             } else {
                 area = max(area, height[right] * (right - left));
-                right--;
+                right--; // 快速排序类比
             }
         }
 
-        return area;
+        return area; //忘记返回值
     }
 };
 // @lc code=end
