@@ -98,8 +98,39 @@ public:
         // 3 --3  1 --1  2 ---1
 
         //如果删除呢 ？？？
+        // unordered_map<int, int> map; //不是放入40000，最多三个，可以用数组表示
 
-        unordered_map<int, int> hash; //40000
+        unordered_map<int, int> hash; //
+
+        int begin = 0; //窗口内只能包含2个种水果
+        int end = 0; //窗口内只能包含2个种水果
+        int ret = 0;
+        while (end < tree.size()) {
+
+            hash[tree[end]]++;
+            //规则1 判断是否能放入篮子,如果超过2个直接删除
+            //如何删除一个key，直接删除可以吗?可以，但是这里考虑移动问题
+            // if (hash.size() > 2) {
+            //     int step = hash[tree[begin]];
+            //     hash.erase(tree[begin]);
+            //     begin += step;
+            // }
+            while (hash.size() > 2) {
+                if (--hash[tree[begin]] == 0) {
+                    hash.erase(tree[begin]);
+                }
+                begin++;
+                ////[1,0,1,4,1,4,1,2,3]   5
+                //这里结果肯定是 保留相邻的1 去掉0 ，
+                // 特点：2个重复的1 1个重复的0
+                //这是最烧脑地方。
+            }
+            //我的是固定的，这个是变化的
+            ret = max(ret, end - begin + 1);
+            end++;
+        }
+
+        return ret;
     }
 };
 // @lc code=end
