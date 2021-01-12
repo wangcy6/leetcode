@@ -49,8 +49,7 @@
 
 // @lc code=start
 
-class Solution
-{
+class Solution {
 public:
     //看到这个题目 输入: "bbbbb" ，我马上想到map 统计每个字符个数，
     //这里让统计key 可能是任意字符长度子串 "pwwkew" 该怎么办
@@ -65,12 +64,10 @@ public:
         //如果重复出现。舍去后面字符重新计算。
         int start = 0;
 
-        for (int i = 0; i < s.size(); i++)
-        {
+        for (int i = 0; i < s.size(); i++) {
             char temp = s[i];
             //位置关系 [0 ...start ...i)
-            if (data[temp] >= start)
-            {
+            if (data[temp] >= start) {
                 //如果有重复部分，移动掉前缀重复,重新开始计算。
                 //移动窗口开始位置。
                 start = data[temp] + 1;
@@ -84,8 +81,7 @@ public:
     }
 };
 
-class Solution1
-{
+class Solution1 {
 public:
     //看到这个题目不重复，我马上想到map 统计每个字符个数，
     //这里让统计key 可能是任意字符长度该怎么办
@@ -97,11 +93,9 @@ public:
         unordered_map<char, int> data;
         int start = 0;
 
-        for (int i = 0; i < s.size(); i++)
-        {
+        for (int i = 0; i < s.size(); i++) {
             char temp = s[i];
-            if (data.count(temp) > 0 && data[temp] >= start)
-            {
+            if (data.count(temp) > 0 && data[temp] >= start) {
                 start = data[temp] + 1;
             }
             data[temp] = i;
@@ -113,4 +107,3 @@ public:
     }
 };
 // @lc code=end
-
